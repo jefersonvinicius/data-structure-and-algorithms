@@ -16,6 +16,10 @@ struct Stack* createStack(unsigned capacity) {
     return stack;
 }
 
+int getSize(struct Stack* stack) {
+    return stack->top + 1;
+}
+
 int isFull(struct Stack* stack) {
     return stack->top == stack->capacity - 1;
 }
@@ -41,7 +45,7 @@ int peek(struct Stack* stack) {
 
 int main() {
 
-    printf("Stack As Array\n");
+    printf("Stack as Array\n");
     struct Stack* stack = createStack(100);
 
     push(stack, 10);
@@ -49,6 +53,8 @@ int main() {
     push(stack, 30);
 
     printf("%d popped from stack\n", pop(stack));
+    printf("Stack top: %d\n", peek(stack));
+    printf("Stack size: %d\n", getSize(stack));
 
     return 0;
 }
