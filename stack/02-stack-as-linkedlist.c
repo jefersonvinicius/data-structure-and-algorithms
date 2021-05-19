@@ -53,11 +53,9 @@ int peek(struct StackNode *root) {
 int main() {
 
     struct StackNode* root = newNode(1);
-    // printf("Root address: %p\n", &*root);
+    
     push(&root, 2);
-    // printf("Root address: %p\n", &*root);
     push(&root, 3);
-    // printf("Root address: %p\n", &*root);
 
     printf("Top: %d\n", peek(root));
 
