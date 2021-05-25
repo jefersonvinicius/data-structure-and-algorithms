@@ -56,6 +56,13 @@ int char_is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
+int get_operator_precedence(char operator) {
+    if (operator == '+' || operator == '-') return 1;
+    if (operator == '*' || operator == '/') return 2;
+    if (operator == '^') return 3;
+    return -1;
+}
+
 
 void append_char(char *str, char c) {
     int newSize = (strlen(str) + 2); 
@@ -64,22 +71,20 @@ void append_char(char *str, char c) {
     strcat(str, cater);
 }
 
-// const char* pop_all_stack_and_get_as_string(struct StackNode *stack) {
-//     char *stack_content = malloc(0);
-//     while (!is_empty(&stack)) {
-//         append_char(stack_content, pop(&stack));
-//     }
-//     strrev(stack_content);
-//     return stack_content;
-// }
-
 void pop_until_last_left_parentesis(struct StackNode *stack, char *post_fix) {
-    char *content = malloc(0);
     while (!is_empty(stack)) {
         char popped = pop(&stack);
         if (popped == '(') break;
         append_char(post_fix, popped);
     }
+}
+
+void pop_until_find_stack_item_have_less_precedence_than_current_operator_and_push_it(char current_operator, struct StackNode *stack, char *post_fix) {
+    int current_operator_precedence = get_operator_precedence(current_operator);
+    while (!is_empty(stack) && current_operator_precedence <= get_operator_precedence(top(stack))) {
+        append_char(post_fix, pop(&stack));
+    }
+    push(&stack, current_operator);
 }
 
 const char* infix_to_postfix(const char* infixExpression) {
@@ -95,26 +100,30 @@ const char* infix_to_postfix(const char* infixExpression) {
         } else if (current_char == ')') {
             pop_until_last_left_parentesis(stack, postFix);
         } else {
-            
+            pop_until_find_stack_item_have_less_precedence_than_current_operator_and_push_it(current_char, stack, postFix);   
         }
     }
 
+    while (!is_empty(stack)) {
+        append_char(postFix, pop(&stack));
+    }
+    
     return postFix;
 }
 
 int main() {
 
-    // char expression1[] = "a-b";
-    char expression2[] = "a-b*c*****+++++++-------****/////////";
-    // char expression3[] = "(a-b)*c";
-    // char expression4[] = "a+b*c^d-e";
-    // char expression5[] = "a*(b+c)*(d-g)*h";
-    // char expression6[] = "a*b-c*d^e/f+g*h";
+    char expression1[] = "a-b";
+    char expression2[] = "a-b*c";
+    char expression3[] = "(a-b)*c";
+    char expression4[] = "a+b*c^d-e";
+    char expression5[] = "a*(b+c)*(d-g)*h";
+    char expression6[] = "a*b-c*d^e/f+g*h";
 
-    // printf("infix: %s - postfix: %s\n", expression1, infix_to_postfix(expression1));
+    printf("infix: %s - postfix: %s\n", expression1, infix_to_postfix(expression1));
     printf("infix: %s - postfix: %s\n", expression2, infix_to_postfix(expression2));
-    // printf("infix: %s - postfix: %s\n", expression3, infix_to_postfix(expression3));
-    // printf("infix: %s - postfix: %s\n", expression4, infix_to_postfix(expression4));
-    // printf("infix: %s - postfix: %s\n", expression5, infix_to_postfix(expression5));
-    // printf("infix: %s - postfix: %s\n", expression6, infix_to_postfix(expression6));
+    printf("infix: %s - postfix: %s\n", expression3, infix_to_postfix(expression3));
+    printf("infix: %s - postfix: %s\n", expression4, infix_to_postfix(expression4));
+    printf("infix: %s - postfix: %s\n", expression5, infix_to_postfix(expression5));
+    printf("infix: %s - postfix: %s\n", expression6, infix_to_postfix(expression6));
 }
