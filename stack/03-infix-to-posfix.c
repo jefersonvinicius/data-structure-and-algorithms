@@ -71,20 +71,20 @@ void append_char(char *str, char c) {
     strcat(str, cater);
 }
 
-void pop_until_last_left_parentesis(struct StackNode *stack, char *post_fix) {
-    while (!is_empty(stack)) {
-        char popped = pop(&stack);
+void pop_until_last_left_parentesis(struct StackNode **stack, char *post_fix) {
+    while (!is_empty(*stack)) {
+        char popped = pop(stack);
         if (popped == '(') break;
         append_char(post_fix, popped);
     }
 }
 
-void pop_until_find_stack_item_have_less_precedence_than_current_operator_and_push_it(char current_operator, struct StackNode *stack, char *post_fix) {
+void pop_until_find_operator_have_less_precedence_than_current_operator_and_push_it(char current_operator, struct StackNode** stack, char *post_fix) {
     int current_operator_precedence = get_operator_precedence(current_operator);
-    while (!is_empty(stack) && current_operator_precedence <= get_operator_precedence(top(stack))) {
-        append_char(post_fix, pop(&stack));
+    while (!is_empty(*stack) && current_operator_precedence <= get_operator_precedence(top(*stack))) {
+        append_char(post_fix, pop(stack));
     }
-    push(&stack, current_operator);
+    push(stack, current_operator);
 }
 
 const char* infix_to_postfix(const char* infixExpression) {
@@ -98,9 +98,9 @@ const char* infix_to_postfix(const char* infixExpression) {
         } else if (current_char == '(') {
             push(&stack, current_char);
         } else if (current_char == ')') {
-            pop_until_last_left_parentesis(stack, postFix);
+            pop_until_last_left_parentesis(&stack, postFix);
         } else {
-            pop_until_find_stack_item_have_less_precedence_than_current_operator_and_push_it(current_char, stack, postFix);   
+            pop_until_find_operator_have_less_precedence_than_current_operator_and_push_it(current_char, &stack, postFix);   
         }
     }
 
