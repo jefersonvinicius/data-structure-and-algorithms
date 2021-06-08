@@ -29,14 +29,13 @@ int queue_is_empty(struct Queue* queue) {
 }
 
 void enqueue(struct Queue *queue, int value) {
-    struct Node* newNode = create_node(value);
+    struct Node* new_node = create_node(value);
     if (queue_is_empty(queue)) {
-        queue->front = newNode;
-        queue->rear = newNode;
+        queue->front = new_node;
+        queue->rear = new_node;
     } else {
-        struct Node* tmp = queue->rear;
-        queue->rear = newNode;
-        queue->rear->next = tmp;
+        queue->rear->next = new_node;
+        queue->rear = new_node;
     }
 }
 
@@ -54,15 +53,12 @@ void dequeue(struct Queue *queue) {
     free(tmp);
 }
 
-void print_queue(struct Queue* queue) {
-    struct Node* currentNode = queue->rear;
-    while (1) {
-        if (currentNode != NULL) printf("NODE: (%p::%d) ", currentNode, currentNode->data);
-        if (currentNode->next != NULL) printf("-> (%p::%d)", currentNode->next, currentNode->next->data);
+void dequeue_and_print_all_queue(struct Queue *queue) {
+    while (queue->front != NULL) {
+        printf("(FRONT %p::%d)", queue->front, queue->front->data);
+        if (queue->front->next != NULL) printf(" -> (NEXT %p::%d)", queue->front->next, queue->front->next->data);
         printf("\n");
-
-        if (currentNode->next == NULL) break;
-        currentNode = currentNode->next;
+        dequeue(queue);
     }
 }
 
@@ -75,14 +71,7 @@ int main() {
     enqueue(queue, 3);
     enqueue(queue, 4);
 
-    print_queue(queue);
-    printf("front: %d\n", queue->front->data);
-    printf("rear: %d\n", queue->rear->data);
-
-    dequeue(queue);
-
-    printf("%d\n", queue->front->data); 
-    printf("%d\n", queue->rear->data);
+    dequeue_and_print_all_queue(queue);
     
     return 0;
 }
