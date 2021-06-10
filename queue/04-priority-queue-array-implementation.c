@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 struct Item {
     int data;
@@ -32,6 +33,27 @@ void enqueue(struct PriorityQueue* queue, int data, int priority) {
     queue->items[queue->current_index++] = item;
 }
 
+void dequeue(struct PriorityQueue* queue) {
+    int biggerPriorityValue = INT_MIN;
+    int biggerPriorityIndex = 0;
+    for (int i = 0; i < queue->current_index; i++) {
+        if (queue->items[i]->priority > biggerPriorityValue) {
+            biggerPriorityIndex = i;
+            biggerPriorityValue = queue->items[i]->priority;
+        }
+    }
+    if (biggerPriorityIndex < queue->current_index - 1) { 
+        // this operation can be costly compared to linked list implementation
+        for (int i = biggerPriorityIndex; i < queue->current_index; i++) {
+            queue->items[i] = queue->items[i + 1];
+        }
+    }
+    free(queue->items[queue->current_index - 1]);
+    queue->current_index--;
+}
+
+
+
 struct Item* front(struct PriorityQueue* queue) {
     return queue->items[0];
 }
@@ -43,8 +65,14 @@ struct Item* rear(struct PriorityQueue* queue) {
 int main() {
     struct PriorityQueue *queue = create_queue(10);
     enqueue(queue, 1, 1);
-    enqueue(queue, 2, 2);
-    enqueue(queue, 3, 3);
+    enqueue(queue, 2, 3);
+    enqueue(queue, 3, 4);
+
+    printf("FRONT: %d - %d\n", front(queue)->data, front(queue)->priority);
+    printf("REAR: %d - %d\n", rear(queue)->data, rear(queue)->priority);
+
+    dequeue(queue);
+
     printf("FRONT: %d - %d\n", front(queue)->data, front(queue)->priority);
     printf("REAR: %d - %d\n", rear(queue)->data, rear(queue)->priority);
 }
