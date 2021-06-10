@@ -33,7 +33,7 @@ void enqueue(struct PriorityQueue* queue, int data, int priority) {
     queue->items[queue->current_index++] = item;
 }
 
-void dequeue(struct PriorityQueue* queue) {
+int get_highest_priority_item_index(struct PriorityQueue *queue) {
     int biggerPriorityValue = INT_MIN;
     int biggerPriorityIndex = 0;
     for (int i = 0; i < queue->current_index; i++) {
@@ -42,6 +42,11 @@ void dequeue(struct PriorityQueue* queue) {
             biggerPriorityValue = queue->items[i]->priority;
         }
     }
+    return biggerPriorityIndex;
+}
+
+void dequeue(struct PriorityQueue* queue) {
+    int biggerPriorityIndex = get_highest_priority_item_index(queue);
     if (biggerPriorityIndex < queue->current_index - 1) { 
         // this operation can be costly compared to linked list implementation
         for (int i = biggerPriorityIndex; i < queue->current_index; i++) {
@@ -52,7 +57,10 @@ void dequeue(struct PriorityQueue* queue) {
     queue->current_index--;
 }
 
-
+struct Item* get_highest_priority_item(struct PriorityQueue *queue) {
+    int biggerPriorityIndex = get_highest_priority_item_index(queue);
+    return queue->items[biggerPriorityIndex];
+}
 
 struct Item* front(struct PriorityQueue* queue) {
     return queue->items[0];
@@ -67,12 +75,20 @@ int main() {
     enqueue(queue, 1, 1);
     enqueue(queue, 2, 3);
     enqueue(queue, 3, 4);
+    enqueue(queue, 3, 8);
+    enqueue(queue, 3, 9);
+    enqueue(queue, 3, 1);
 
-    printf("FRONT: %d - %d\n", front(queue)->data, front(queue)->priority);
-    printf("REAR: %d - %d\n", rear(queue)->data, rear(queue)->priority);
+    printf("FRONT: v::%d - p::%d\n", front(queue)->data, front(queue)->priority);
+    printf("REAR: v::%d - p::%d\n", rear(queue)->data, rear(queue)->priority);
+
+    struct Item* highest = get_highest_priority_item(queue);
+    printf("HIGHEST: v::%d - p::%d\n\n", highest->data, highest->priority);
 
     dequeue(queue);
 
-    printf("FRONT: %d - %d\n", front(queue)->data, front(queue)->priority);
-    printf("REAR: %d - %d\n", rear(queue)->data, rear(queue)->priority);
+    printf("FRONT: v::%d - p::%d\n", front(queue)->data, front(queue)->priority);
+    printf("REAR: v::%d - p::%d\n", rear(queue)->data, rear(queue)->priority);
+    highest = get_highest_priority_item(queue);
+    printf("HIGHEST: v::%d - p::%d\n", highest->data, highest->priority);
 }
