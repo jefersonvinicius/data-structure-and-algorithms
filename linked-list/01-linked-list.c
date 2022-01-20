@@ -24,7 +24,7 @@ struct LinkedList* create_linked_list() {
     return linked_list;
 }
 
-void add_node(struct LinkedList* linked_list, struct Node* node) {
+void append(struct LinkedList* linked_list, struct Node* node) {
     if (linked_list->head == NULL) {
         linked_list->head = node;
         return;
@@ -41,6 +41,19 @@ void add_node(struct LinkedList* linked_list, struct Node* node) {
             linked_list_node = linked_list_node->next;
         }
     }
+}
+
+void push(struct LinkedList* linked_list, struct Node* node) {
+    if (linked_list->head == NULL) {
+        linked_list->head = node;
+        return;
+    }
+
+    struct Node* head = malloc(sizeof(struct Node)); 
+    head = linked_list->head;
+
+    linked_list->head = node;
+    node->next = head;
 }
 
 int is_empty(struct LinkedList* linked_list) {
@@ -65,9 +78,51 @@ void delete_by_value(struct LinkedList* linked_list, int value) {
         linked_list->head = linked_list->head->next;
         return;
     }
+
+    struct Node* node = malloc(sizeof(struct Node));
+    node = linked_list->head;
+
+    while (node->next != NULL) {
+        if (node->next->value == value) {
+            node->next = node->next->next;
+            break;
+        } else {
+            node = node->next;
+        }
+    }
 }
 
+void delete_by_reference(struct LinkedList* linked_list, struct Node* node_to_delete) {
+    if (linked_list->head == node_to_delete) {
+        linked_list->head = linked_list->head->next;
+        return;
+    }
 
+    struct Node* node = malloc(sizeof(struct Node));
+    node = linked_list->head;
+
+    while (node->next != NULL) {
+        if (node->next == node_to_delete) {
+            node->next = node->next->next;
+            break;
+        } else {
+            node = node->next;
+        }
+    }
+}
+
+void print_lk(struct LinkedList* linked_list) {
+    struct Node* node = malloc(sizeof(struct Node));
+    node = linked_list->head;
+    while (node != NULL) {
+        if (node->next == NULL) {
+            printf("(%p) %d\n", &node, node->value);
+        } else {
+            printf("(%p) %d -> ", &node, node->value);
+        }
+        node = node->next;
+    }
+}
 
 int main() {
     { // should create linked list correctly
@@ -77,10 +132,26 @@ int main() {
         assert(linked_list->head == NULL);
     }
 
-    { // should add node to linked list head correctly
+    { // should push node to linked list correctly
+        struct LinkedList* linked_list = create_linked_list();
+        push(linked_list, create_node(1));
+        assert(is_empty(linked_list) == 0);
+        assert(size(linked_list) == 1);
+        assert(linked_list->head->value == 1);
+        assert(linked_list->head->next == NULL);
+        push(linked_list, create_node(2));
+        assert(linked_list->head->value == 2);
+        assert(linked_list->head->next->value == 1);
+        append(linked_list, create_node(3));
+        assert(linked_list->head->value == 2);
+        assert(linked_list->head->next->value == 1);
+        assert(linked_list->head->next->next->value == 3);
+    }
+
+    { // should append node to linked list head correctly
         struct LinkedList* linked_list = create_linked_list();
         struct Node* node = create_node(1);
-        add_node(linked_list, node);
+        append(linked_list, node);
         assert(is_empty(linked_list) == 0);
         assert(size(linked_list) == 1);
         assert(linked_list->head->value == 1);
@@ -89,8 +160,8 @@ int main() {
 
     { // should bind node to next node available
         struct LinkedList* linked_list = create_linked_list();
-        add_node(linked_list, create_node(1));
-        add_node(linked_list, create_node(2));
+        append(linked_list, create_node(1));
+        append(linked_list, create_node(2));
         assert(size(linked_list) == 2);
         assert(linked_list->head->value == 1);
         assert(linked_list->head->next->value == 2);
@@ -98,26 +169,72 @@ int main() {
 
     { // should delete by value correctly even when value is in start
         struct LinkedList* linked_list = create_linked_list();
-        add_node(linked_list, create_node(1));
-        add_node(linked_list, create_node(2));
-        add_node(linked_list, create_node(3));
+        append(linked_list, create_node(1));
+        append(linked_list, create_node(2));
+        append(linked_list, create_node(3));
         delete_by_value(linked_list, 1);
         assert(size(linked_list) == 2);
         assert(linked_list->head->value == 2);
         assert(linked_list->head->next->value == 3);
     }
 
-    { // should delete by value correctly when value is not in middle
+    { // should delete by value correctly when value is in middle
         struct LinkedList* linked_list = create_linked_list();
-        add_node(linked_list, create_node(1));
-        add_node(linked_list, create_node(2));
-        add_node(linked_list, create_node(3));
+        append(linked_list, create_node(1));
+        append(linked_list, create_node(2));
+        append(linked_list, create_node(3));
         delete_by_value(linked_list, 2);
+        assert(size(linked_list) == 2);
+        assert(linked_list->head->value == 1);
+        assert(linked_list->head->next->value == 3);
+    }
+
+    { // should delete by value correctly when value is in the end
+        struct LinkedList* linked_list = create_linked_list();
+        append(linked_list, create_node(1));
+        append(linked_list, create_node(2));
+        append(linked_list, create_node(3));
+        delete_by_value(linked_list, 3);
         assert(size(linked_list) == 2);
         assert(linked_list->head->value == 1);
         assert(linked_list->head->next->value == 2);
     }
 
+    { // should delete by reference correctly even when value is in start
+        struct LinkedList* linked_list = create_linked_list();
+        struct Node* node = create_node(1);
+        append(linked_list, node);
+        append(linked_list, create_node(2));
+        append(linked_list, create_node(3));
+        delete_by_reference(linked_list, node);
+        assert(size(linked_list) == 2);
+        assert(linked_list->head->value == 2);
+        assert(linked_list->head->next->value == 3);
+    }
+
+    { // should delete by reference correctly when value is in middle
+        struct LinkedList* linked_list = create_linked_list();
+        struct Node* node = create_node(2);
+        append(linked_list, create_node(1));
+        append(linked_list, node);
+        append(linked_list, create_node(3));
+        delete_by_reference(linked_list, node);
+        assert(size(linked_list) == 2);
+        assert(linked_list->head->value == 1);
+        assert(linked_list->head->next->value == 3);
+    }
+
+    { // should delete by reference correctly when value is in the end
+        struct LinkedList* linked_list = create_linked_list();
+        struct Node* node = create_node(3);
+        append(linked_list, create_node(1));
+        append(linked_list, create_node(2));
+        append(linked_list, node);
+        delete_by_reference(linked_list, node);
+        assert(size(linked_list) == 2);
+        assert(linked_list->head->value == 1);
+        assert(linked_list->head->next->value == 2);
+    }
 
     return 0;
 }
