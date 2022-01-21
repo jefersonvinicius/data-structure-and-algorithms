@@ -65,6 +65,11 @@ void push(struct LinkedList* linked_list, struct Node* node) {
     node->next = head;
 }
 
+void insert_after_node(struct Node* prev_node, struct Node* inserting_node) {
+    inserting_node->next = prev_node->next;
+    prev_node->next = inserting_node;
+}
+
 int is_empty(struct LinkedList* linked_list) {
     return linked_list->head == NULL;
 }
@@ -251,9 +256,22 @@ int main() {
         append(linked_list, create_node(2));
         append(linked_list, create_node(3));
         struct Node* node = get_at(linked_list, 1);
-        struct Node* nodeNotFound = get_at(linked_list, 3);
+        struct Node* node_not_found = get_at(linked_list, 3);
         assert(node->value == 2);
-        assert(nodeNotFound == NULL);
+        assert(node_not_found == NULL);
+    }
+
+    { // should insert node after another node
+        struct LinkedList* linked_list = create_linked_list();
+        struct Node* node_ref = create_node(2);
+        append(linked_list, create_node(1));
+        append(linked_list, node_ref);
+        append(linked_list, create_node(4));
+        insert_after_node(node_ref, create_node(3));
+        assert(linked_list->head->value == 1);
+        assert(linked_list->head->next->value == 2);
+        assert(linked_list->head->next->next->value == 3);
+        assert(linked_list->head->next->next->next->value == 4);
     }
 
     return 0;
