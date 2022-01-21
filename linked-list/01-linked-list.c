@@ -43,6 +43,15 @@ void append(struct LinkedList* linked_list, struct Node* node) {
     }
 }
 
+struct Node* get_at(struct LinkedList* linked_list, int index) {
+    struct Node* node = malloc(sizeof(struct Node));
+    node = linked_list->head;
+    for (int i = 0; i < index; i++) {
+        node = node->next;
+    }
+    return node;
+}
+
 void push(struct LinkedList* linked_list, struct Node* node) {
     if (linked_list->head == NULL) {
         linked_list->head = node;
@@ -234,6 +243,17 @@ int main() {
         assert(size(linked_list) == 2);
         assert(linked_list->head->value == 1);
         assert(linked_list->head->next->value == 2);
+    }
+
+    { // should get node at index
+        struct LinkedList* linked_list = create_linked_list();
+        append(linked_list, create_node(1));
+        append(linked_list, create_node(2));
+        append(linked_list, create_node(3));
+        struct Node* node = get_at(linked_list, 1);
+        struct Node* nodeNotFound = get_at(linked_list, 3);
+        assert(node->value == 2);
+        assert(nodeNotFound == NULL);
     }
 
     return 0;
