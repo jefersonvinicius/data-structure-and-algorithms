@@ -66,9 +66,37 @@ void push(struct DoublyLinkedList* list, struct Node* node) {
 
 void insert_after(struct Node* prev_node, struct Node* node) {
 
+    if (prev_node->next == NULL) {
+        node->next = NULL;
+        prev_node->next = node;
+        node->prev = prev_node;
+        return;
+    }
+
+    prev_node->next->prev = node;
+    node->next = prev_node->next;
+    prev_node->next = node;
+    node->prev = prev_node;
+}
+
+void clear_list(struct DoublyLinkedList* list) {
+    struct Node* current = list->head;
+    struct Node* next;
+
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+    list->head = NULL;
 }
 
 void print_list(struct DoublyLinkedList* list) {
+    if (list->head == NULL) {
+        printf("List empty\n");
+        return;
+    }
+
     printf("Next order:\n");
     struct Node* node = malloc(sizeof(struct Node));
     node = list->head;
@@ -129,22 +157,57 @@ int main() {
         assert(list->head->next->next->prev->prev->prev == NULL);
     }
 
-    { // should insert node afeter another node
+    { // should insert node after another node in start
         struct DoublyLinkedList* list = create_list();
         struct Node* node1 = create_node(1); 
         struct Node* node2 = create_node(2); 
-        struct Node* node3 = create_node(3); 
         append(list, node1);
         append(list, node2);
-        append(list, node3);
 
         insert_after(node1, create_node(4));
+        
         assert(list->head->value == 1);
         assert(list->head->next->value == 4);
         assert(list->head->next->next->value == 2);
         assert(list->head->next->next->prev->value == 4);
         assert(list->head->next->next->prev->prev->value == 1);
         assert(list->head->next->next->prev->prev->prev == NULL);
+    }
+
+    { // should insert node after another node in end
+        struct DoublyLinkedList* list = create_list();
+        struct Node* node1 = create_node(1); 
+        struct Node* node2 = create_node(2); 
+        append(list, node1);
+        append(list, node2);
+
+        insert_after(node2, create_node(4));
+
+        assert(list->head->value == 1);
+        assert(list->head->next->value == 2);
+        assert(list->head->next->next->value == 4);
+        assert(list->head->next->next->prev->value == 2);
+        assert(list->head->next->next->prev->prev->value == 1);
+        assert(list->head->next->next->prev->prev->prev == NULL);
+    }
+
+    { // should insert node after another node in middle
+        struct DoublyLinkedList* list = create_list();
+        struct Node* node2 = create_node(2); 
+        append(list, create_node(1));
+        append(list, node2);
+        append(list, create_node(3));
+
+        insert_after(node2, create_node(4));
+        
+        assert(list->head->value == 1);
+        assert(list->head->next->value == 2);
+        assert(list->head->next->next->value == 4);
+        assert(list->head->next->next->next->value == 3);
+        assert(list->head->next->next->next->prev->value == 4);
+        assert(list->head->next->next->next->prev->prev->value == 2);
+        assert(list->head->next->next->next->prev->prev->prev->value == 1);
+        assert(list->head->next->next->next->prev->prev->prev->prev == NULL);
     }
 
     return 0;
