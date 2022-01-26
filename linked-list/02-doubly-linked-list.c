@@ -91,6 +91,25 @@ void clear_list(struct DoublyLinkedList* list) {
     list->head = NULL;
 }
 
+void delete_node(struct Node* node) {
+    if (node->prev == NULL) {
+        struct Node* next = node->next;
+        next->prev = NULL;   
+        *node = *next;
+        return;
+    }
+
+    if (node->next == NULL) {
+        node->prev->next = NULL;
+        free(node);
+        return;
+    }
+
+    struct Node* next = node->next;
+    next->prev = node->prev;
+    *node = *next;
+}
+
 void print_list(struct DoublyLinkedList* list) {
     if (list->head == NULL) {
         printf("List empty\n");
@@ -98,8 +117,7 @@ void print_list(struct DoublyLinkedList* list) {
     }
 
     printf("Next order:\n");
-    struct Node* node = malloc(sizeof(struct Node));
-    node = list->head;
+    struct Node* node = list->head;
     while (node->next != NULL) {
         printf("%d -> ", node->value);
         node = node->next;
@@ -199,7 +217,7 @@ int main() {
         append(list, create_node(3));
 
         insert_after(node2, create_node(4));
-        
+
         assert(list->head->value == 1);
         assert(list->head->next->value == 2);
         assert(list->head->next->next->value == 4);
@@ -208,6 +226,54 @@ int main() {
         assert(list->head->next->next->next->prev->prev->value == 2);
         assert(list->head->next->next->next->prev->prev->prev->value == 1);
         assert(list->head->next->next->next->prev->prev->prev->prev == NULL);
+    }
+
+    { // should delete node in start
+        struct DoublyLinkedList* list = create_list();
+        struct Node* node1 = create_node(1); 
+        append(list, node1);
+        append(list, create_node(2));
+        append(list, create_node(3));
+
+        delete_node(node1);
+
+        assert(list->head->value == 2);
+        assert(list->head->next->value == 3);
+        assert(list->head->next->next == NULL);
+        assert(list->head->next->prev->value == 2);
+        assert(list->head->next->prev->prev == NULL);
+    }
+
+    { // should delete node in middle
+        struct DoublyLinkedList* list = create_list();
+        struct Node* node2 = create_node(2); 
+        append(list, create_node(1));
+        append(list, node2);
+        append(list, create_node(3));
+
+        delete_node(node2);
+        
+        assert(list->head->value == 1);
+        assert(list->head->next->value == 3);
+        assert(list->head->next->next == NULL);
+        assert(list->head->next->prev->value == 1);
+        assert(list->head->next->prev->prev == NULL);
+    }
+
+    { // should delete node in end
+        struct DoublyLinkedList* list = create_list();
+        struct Node* node3 = create_node(3); 
+        append(list, create_node(1));
+        append(list, create_node(2));
+        append(list, node3);
+
+        delete_node(node3);
+        
+        assert(list->head->value == 1);
+        assert(list->head->next->value == 2);
+        assert(list->head->next->next == NULL);
+        assert(list->head->next->prev->value == 1);
+        assert(list->head->next->prev->prev == NULL);
     }
 
     return 0;
