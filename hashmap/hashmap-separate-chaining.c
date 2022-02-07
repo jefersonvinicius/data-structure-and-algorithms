@@ -21,16 +21,23 @@ struct HashMap {
 struct HashMap* create_hashmap() {
     struct HashMap* hashmap = malloc(sizeof(struct HashMap));
     hashmap->keys = malloc(sizeof(int) * MOD);
-    memset(hashmap->keys, -20, MOD);
+    for (int i = 0; i < MOD; i++) {
+        hashmap->keys[i] = INT_MIN;
+    }
     return hashmap;
 }
-
-int get(char* key) {}
 
 int set(struct HashMap* map, char* key, int value) {
     int hashed = hash(key);
     map->keys[hashed] = value;
 }
+
+int get(struct HashMap* map, char *key) {
+    int hashed = hash(key);
+    int value = map->keys[hashed];
+    return value;
+}
+
 
 void debug_hashmap(struct HashMap* map) {
     int found_something = 0;
@@ -62,10 +69,17 @@ int main() {
     { // should set key-value at hashmap correctly
         struct HashMap* map = create_hashmap();
         set(map, "jeferson", 10);
-        debug_hashmap(map);
+        set(map, "key-2", 20);
         assert(map->keys[60] == 10);
+        assert(map->keys[24] == 20);
     }
 
+    { // should get value by key correctly
+        struct HashMap* map = create_hashmap();
+        set(map, "jeferson", 10);
+        assert(get(map, "jeferson") == 10);
+        assert(get(map, "not_exists") == INT_MIN);
+    }
     
 
     return 0;
