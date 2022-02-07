@@ -38,6 +38,18 @@ int get(struct HashMap* map, char *key) {
     return value;
 }
 
+int* values(struct HashMap* map) {
+    int* values = malloc(sizeof(int) * MOD);
+    int index = 0;
+    for (int i = 0; i < MOD; i++) {
+        if (map->keys[i] != INT_MIN) {
+            values[index] = map->keys[i];
+            index++; 
+        }
+    }
+    return values;
+}
+
 
 void debug_hashmap(struct HashMap* map) {
     int found_something = 0;
@@ -49,6 +61,12 @@ void debug_hashmap(struct HashMap* map) {
     }
 
     if (!found_something) printf("Map Empty!\n");
+}
+
+void debug_array(int* array) {
+    for (int i = 0; i < sizeof(array); i++) {
+        printf("[%d] (%d)\n", i, array[i]);
+    }
 }
 
 int main() {
@@ -79,6 +97,15 @@ int main() {
         set(map, "jeferson", 10);
         assert(get(map, "jeferson") == 10);
         assert(get(map, "not_exists") == INT_MIN);
+    }
+
+    { // should get all values from hashmap
+        struct HashMap* map = create_hashmap();
+        set(map, "jeferson", 10);
+        set(map, "key-2", 20);
+        int* all_values = values(map);
+        assert(all_values[0] == 20);
+        assert(all_values[1] == 10);
     }
     
 
