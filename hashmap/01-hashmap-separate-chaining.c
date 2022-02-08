@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "linkedlist/linkedlist.h"
 
 #define MOD 100
 
@@ -15,26 +16,27 @@ int hash(char* key) {
 }
 
 struct HashMap {
-    int* keys;
+    struct LinkedList** keys;
 };
 
 struct HashMap* create_hashmap() {
     struct HashMap* hashmap = malloc(sizeof(struct HashMap));
-    hashmap->keys = malloc(sizeof(int) * MOD);
+    hashmap->keys = malloc(sizeof(struct LinkedList) * MOD);
     for (int i = 0; i < MOD; i++) {
-        hashmap->keys[i] = INT_MIN;
+        hashmap->keys[i] = create_linked_list();
     }
     return hashmap;
 }
 
 int set(struct HashMap* map, char* key, int value) {
     int hashed = hash(key);
-    map->keys[hashed] = value;
+    append(map->keys[hashed], create_node(value)); 
 }
 
 int get(struct HashMap* map, char *key) {
     int hashed = hash(key);
-    int value = map->keys[hashed];
+    struct LinkedList* list = map->keys[hashed];
+    
     return value;
 }
 
@@ -71,6 +73,8 @@ void debug_array(int* array) {
 
 int main() {
 
+    assert(hash("jeferson") == hash("fersonej"));
+
     { // should hash correctly
         assert(hash("a") == 97);
         assert(hash("d") == 0);
@@ -106,6 +110,14 @@ int main() {
         int* all_values = values(map);
         assert(all_values[0] == 20);
         assert(all_values[1] == 10);
+    }
+    
+    { // should handle collision using "separate chaining" technique
+        struct HashMap* map = create_hashmap();
+        set(map, "jeferson", 10);
+        set(map, "fersonej", 20);
+        assert(get(map, "fersonej") == 20);
+        assert(get(map, "jeferson") == 10);
     }
     
 
