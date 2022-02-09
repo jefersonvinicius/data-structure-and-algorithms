@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 struct Node {
     int value;
+    char* key;
     struct Node *next; 
 };
 
@@ -10,9 +12,10 @@ struct LinkedList {
     struct Node *head;
 };
 
-struct Node* create_node(int value) {
+struct Node* create_node(int value, char* key) {
     struct Node* node = malloc(sizeof(struct Node));
     node->value = value;
+    node->key = key;
     node->next = NULL;
     return node;
 }
@@ -86,6 +89,24 @@ int size(struct LinkedList* linked_list) {
     return count;
 }
 
+struct Node* find_by_value(struct LinkedList* linked_list, int value) {
+    struct Node* node = linked_list->head;
+    while (node != NULL) {
+        if (node->value == value) return node;
+        node = node->next;
+    }
+    return NULL;
+}
+
+struct Node* find_by_key(struct LinkedList* linked_list, char* key) {
+    struct Node* node = linked_list->head;
+    while (node != NULL) {
+        if (strcmp(node->key, key) == 0) return node;
+        node = node->next;
+    }
+    return NULL;
+}
+
 void delete_by_value(struct LinkedList* linked_list, int value) {
     if (linked_list->head->value == value) {
         linked_list->head = linked_list->head->next;
@@ -123,6 +144,26 @@ void delete_by_reference(struct LinkedList* linked_list, struct Node* node_to_de
         }
     }
 }
+
+void delete_by_key(struct LinkedList* linked_list, char* key) {
+    if (strcmp(linked_list->head->key, key) == 0) {
+        linked_list->head = linked_list->head->next;
+        return;
+    }
+
+    struct Node* node = malloc(sizeof(struct Node));
+    node = linked_list->head;
+
+    while (node->next != NULL) {
+        if (strcmp(node->next->key, key) == 0) {
+            node->next = node->next->next;
+            break;
+        } else {
+            node = node->next;
+        }
+    }
+}
+
 
 void print_lk(struct LinkedList* linked_list) {
     struct Node* node = malloc(sizeof(struct Node));
