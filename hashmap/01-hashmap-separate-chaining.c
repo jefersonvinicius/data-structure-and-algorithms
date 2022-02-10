@@ -30,7 +30,12 @@ struct HashMap* create_hashmap() {
 
 int set(struct HashMap* map, char* key, int value) {
     int hashed = hash(key);
-    append(map->keys[hashed], create_node(value, key)); 
+    struct Node* node = find_by_key(map->keys[hashed], key);
+    if (node == NULL) {
+        append(map->keys[hashed], create_node(value, key));
+    } else {
+        node->value = value;
+    }
 }
 
 int get(struct HashMap* map, char *key) {
@@ -100,7 +105,6 @@ int main() {
     assert(hash("jeferson") == hash("fersonej"));
 
     { // should hash correctly
-
         assert(hash("a") == 97);
         assert(hash("d") == 0);
         assert(hash("dd") == 0);
@@ -167,6 +171,17 @@ int main() {
         assert(has_key(map, "jeferson") == 1);
         assert(has_key(map, "fersonej") == 1);
         assert(has_key(map, "not_exists") == 0);
+    }
+
+    { // should override when set the same key
+        struct HashMap* map = create_hashmap();
+        set(map, "jeferson", 10);
+        set(map, "jeferson", 20);
+        int hashed = hash("jeferson");
+        assert(has_key(map, "jeferson") == 1);
+        assert(get(map, "jeferson") == 20);
+        remove_key(map, "jeferson");
+        assert(has_key(map, "jeferson") == 0);
     }
     
 
