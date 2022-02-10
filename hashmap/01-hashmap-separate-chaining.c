@@ -62,6 +62,12 @@ int* values(struct HashMap* map) {
     return values;
 }
 
+int has_key(struct HashMap* map, char* key) {
+    int hashed = hash(key);
+    struct Node* node = find_by_key(map->keys[hashed], key);
+    return node != NULL;
+}
+
 
 void debug_hashmap(struct HashMap* map) {
     int found_something = 0;
@@ -152,6 +158,15 @@ int main() {
         remove_key(map, "fersonej");
         assert(get(map, "jeferson") == 10);
         assert(get(map, "fersonej") == INT_MIN);
+    }
+
+    { // should return has or not key correctly
+        struct HashMap* map = create_hashmap();
+        set(map, "jeferson", 10);
+        set(map, "fersonej", 20);
+        assert(has_key(map, "jeferson") == 1);
+        assert(has_key(map, "fersonej") == 1);
+        assert(has_key(map, "not_exists") == 0);
     }
     
 
