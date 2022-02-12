@@ -36,6 +36,9 @@ int set(struct HashMap* map, char* key, int value) {
         if (map->keys[count] == NULL) {
             map->keys[count] = node;
             break;
+        } else if (strcmp(map->keys[count]->key, key) == 0) {
+            map->keys[count]->value = value;    
+            break;
         } else {
             count++;
         }
@@ -87,7 +90,7 @@ int has_key(struct HashMap* map, char* key) {
     int hashed = hash(key);
     int count = hashed;
     while (count < TABLE_SIZE) {
-        if (strcmp(map->keys[count]->key, key) == 0) {
+        if (map->keys[count] != NULL && strcmp(map->keys[count]->key, key) == 0) {
             return 1;
         } else {
             count++;
@@ -110,9 +113,7 @@ void debug_hashmap(struct HashMap* map) {
 }
 
 void debug_array(int* array) {
-    size_t size = (&array)[1] - array;
-    printf("size: %ld\n", size);
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
         printf("[%d] (%d)\n", i, array[i]);
     }
 }
@@ -155,7 +156,6 @@ int main() {
         set(map, "fersonej", 15);
         set(map, "key-2", 20);
         int* all_values = values(map);
-        debug_array(all_values);
         assert(all_values[0] == 20);
         assert(all_values[1] == 10);
         assert(all_values[2] == 15);
@@ -167,8 +167,6 @@ int main() {
         set(map, "fersonej", 20);
         assert(get(map, "fersonej") == 20);
         assert(get(map, "jeferson") == 10);
-        debug_hashmap(map);
-
         assert(map->keys[60]->value == 10);
         assert(map->keys[61]->value == 20);
     }
@@ -178,7 +176,6 @@ int main() {
         set(map, "jeferson", 10);
         remove_key(map, "jeferson");
         assert(get(map, "jeferson") == INT_MIN);
-        
         set(map, "jeferson", 10);
         set(map, "fersonej", 20);
         remove_key(map, "fersonej");
@@ -193,6 +190,7 @@ int main() {
         assert(has_key(map, "jeferson") == 1);
         assert(has_key(map, "fersonej") == 1);
         assert(has_key(map, "not_exists") == 0);
+        debug_hashmap(map);
     }
 
     { // should override when set the same key
