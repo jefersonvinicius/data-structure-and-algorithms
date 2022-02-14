@@ -43,7 +43,6 @@ int set(struct HashMap* map, char* key, int value) {
             count++;
         }
     }
-    
 }
 
 int get(struct HashMap* map, char *key) {
@@ -104,7 +103,7 @@ void debug_hashmap(struct HashMap* map) {
     int found_something = 0;
     for (int i = 0; i < TABLE_SIZE; i++) {
         if (map->keys[i] != NULL) {
-            printf("[%d] - (%s) %d\n", i, map->keys[i]->key, map->keys[i]->value);
+            printf("[%d] - (%s) -> %d\n", i, map->keys[i]->key, map->keys[i]->value);
             found_something = 1;
         }
     }
@@ -190,20 +189,17 @@ int main() {
         assert(has_key(map, "jeferson") == 1);
         assert(has_key(map, "fersonej") == 1);
         assert(has_key(map, "not_exists") == 0);
-        debug_hashmap(map);
     }
 
     { // should override when set the same key
         struct HashMap* map = create_hashmap();
         set(map, "jeferson", 10);
         set(map, "jeferson", 20);
-        int hashed = hash("jeferson");
         assert(has_key(map, "jeferson") == 1);
         assert(get(map, "jeferson") == 20);
         remove_key(map, "jeferson");
         assert(has_key(map, "jeferson") == 0);
     }
-    
 
     return 0;
 }
