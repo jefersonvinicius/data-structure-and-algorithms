@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <time.h>
+
+#include "selection.h"
 #include "../_utils_/measure.h"
+#include "../_utils_/data.h"
 
+int* data = NULL;
 
-void test() {
-    int n = 1000*1000*1000;
-    while (--n) {}
+void test_selection() {
+    selection(data);
 }
 
-void test2() {
-    int n = 1000*1000;
-    while (--n) {}
-}
 
 int main() {
+    printf("Generating data...\n");
+    data = generate_big_array();
+    printf("Data generated!\n\n");
 
-    measure_function_speed("test", test);
-    measure_function_speed("test 2", test2);
+    measure_function_speed("Selection Algorithm", test_selection);
 
     return 0;
 }

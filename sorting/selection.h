@@ -1,0 +1,2 @@
+
+int* selection(int* data) {}

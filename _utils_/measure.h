@@ -6,6 +6,6 @@ double measure_function_speed(char *label, void (*fn)()) {
     fn();
     clock_t end = clock();
     double speed = (double) (end - begin) / CLOCKS_PER_SEC;
-    printf("%s runs in %f ms\n", label, speed);
+    printf("%s runs in %f s\n", label, speed);
     return speed;
 }
