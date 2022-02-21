@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "selection.h"
+#include "selection/selection.h"
 #include "../_utils_/measure.h"
 #include "../_utils_/data.h"
 
 int* data = NULL;
 
 void test_selection() {
-    selection(data);
+    selection(data, BIG_ARRAY_SIZE);
 }
 
 
