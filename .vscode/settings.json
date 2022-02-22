@@ -3,6 +3,7 @@
         "type_traits": "c",
         "stdlib.h": "c",
         "limits.h": "c",
-        "asserts.h": "c"
+        "asserts.h": "c",
+        "selection.h": "c"
     }
 }
