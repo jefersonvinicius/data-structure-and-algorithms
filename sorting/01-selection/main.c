@@ -1,4 +1,3 @@
-
 #include "selection.h"
 #include "../../_utils_/asserts.h"
 

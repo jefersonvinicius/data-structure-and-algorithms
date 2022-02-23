@@ -3,6 +3,7 @@
 
 #include "01-selection/selection.h"
 #include "02-bubble/bubble.h"
+#include "03-insertion/insertion.h"
 #include "../_utils_/measure.h"
 #include "../_utils_/data.h"
 
@@ -24,6 +25,10 @@ void test_bubble() {
     bubble(get_data_copy(), BIG_ARRAY_SIZE);
 }
 
+void test_insertion() {
+    insertion(get_data_copy(), BIG_ARRAY_SIZE);
+}
+
 
 int main() {
     printf("Generating data...\n");
@@ -32,6 +37,7 @@ int main() {
 
     measure_function_speed("Selection Sort Algorithm", test_selection);
     measure_function_speed("Bubble Sort Algorithm", test_bubble);
+    measure_function_speed("Insertion Sort Algorithm", test_insertion);
 
     return 0;
 }
