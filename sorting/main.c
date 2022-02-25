@@ -40,8 +40,6 @@ int main() {
     data = generate_big_array();
     printf("Data generated!\n\n");
 
-    int d = 7 / 2;
-    printf("%d\n", d);
     measure_function_speed("Selection Sort Algorithm", test_selection);
     measure_function_speed("Bubble Sort Algorithm", test_bubble);
     measure_function_speed("Insertion Sort Algorithm", test_insertion);
