@@ -5,6 +5,7 @@
 #include "02-bubble/bubble.h"
 #include "03-insertion/insertion.h"
 #include "04-merge/merge.h"
+#include "05-quick/quick.h"
 #include "../_utils_/measure.h"
 #include "../_utils_/data.h"
 
@@ -34,6 +35,10 @@ void test_merge() {
     merge(get_data_copy(), BIG_ARRAY_SIZE);
 }
 
+void test_quick() {
+    quick(get_data_copy(), BIG_ARRAY_SIZE);
+}
+
 
 int main() {
     printf("Generating data...\n");
@@ -44,6 +49,7 @@ int main() {
     measure_function_speed("Bubble Sort Algorithm", test_bubble);
     measure_function_speed("Insertion Sort Algorithm", test_insertion);
     measure_function_speed("Merge Sort Algorithm", test_merge);
+    measure_function_speed("Quick Sort Algorithm", test_quick);
 
     return 0;
 }
