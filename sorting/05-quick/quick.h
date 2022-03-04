@@ -31,7 +31,7 @@ int quick_join(int *data, int left, int right) {
         index++;
     }
 
-    data[lowers_index] = pivot;
+    data[left + lowers_index] = pivot;
     index++;
     
     for (int i = 0; i < biggest_index; i++) {
@@ -42,12 +42,23 @@ int quick_join(int *data, int left, int right) {
     return lowers_index;
 }
 
+int break_at = 3, count = 0, original_size= 0;
+
 int* quick_sort(int* data, int left, int right) {
     printf("left: %d, right: %d\n", left, right);
+    count++;
+    // if (count == break_at) {
+    //     return data;
+    // }
     if (left < right) {
+        printf("Data before:\n");
+        debug_int_array(data, original_size);
         int pivot_index = quick_join(data, left, right);
         printf("pivot: %d\n", pivot_index);
-        quick_sort(data, left, pivot_index);
+        printf("Data after:\n");
+        debug_int_array(data, original_size);
+        printf("\n");
+        quick_sort(data, left, pivot_index+1);
         quick_sort(data, pivot_index+1, right);
     }
 
@@ -56,5 +67,6 @@ int* quick_sort(int* data, int left, int right) {
 
 // Iterate by array comparing the current value with previous and insert when previous is bigger
 int* quick(int* data, size_t array_size) {
+    original_size = array_size;
     return quick_sort(data, 0, array_size - 1);
 }
