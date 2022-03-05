@@ -4,6 +4,10 @@
         "stdlib.h": "c",
         "limits.h": "c",
         "asserts.h": "c",
-        "selection.h": "c"
+        "selection.h": "c",
+        "bubble.h": "c",
+        "data.h": "c",
+        "merge.h": "c",
+        "insertion.h": "c"
     }
 }
