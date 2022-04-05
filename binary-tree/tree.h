@@ -85,3 +85,50 @@ int* post_order(struct Tree* tree) {
     _post_order_recursion(tree->root, result, &index);
     return result;
 }
+
+int _index_of(int* data, size_t size_data, int target) {
+    int result = -1;
+    for (int i = 0; i < size_data; i++) {
+        if (data[i] == target) {
+            result = i;
+            break;
+        }
+    }
+    return result;
+}
+
+struct Node* _build(int* pre_order_data, int* in_order_data, int left, int right, int pre_index) {
+    if (left < right) {
+        printf("left: %d - right: %d\n", left, right);
+        int size = right - left + 1;
+        int element = pre_order_data[pre_index];
+        struct Node* root = create_node(element);
+        int in_index = _index_of(in_order_data, size, element);
+
+        struct Node* left = _build(pre_order_data, in_order_data, pre_index, in_index - 1, pre_index + 1);
+        struct Node* right = _build(pre_order_data, in_order_data, in_index + 1, size, pre_index + 1);
+
+        if (left != NULL) root->left = left;
+        if (right != NULL) root->right = right;
+        return root;
+    }   
+}
+
+struct Tree* build_tree_from_pre_and_in_order(int* pre_order_data, int* in_order_data, size_t size) {
+    struct Tree* result = create_binary_tree();
+
+    int pre_index = 0, in_index = 0;
+
+    int element = pre_order_data[pre_index];
+    struct Node* root = create_node(element);
+    in_index = _index_of(in_order_data, size, element);
+
+    struct Node* left = _build(pre_order_data, in_order_data, 0, in_index - 1, pre_index + 1);
+    struct Node* right = _build(pre_order_data, in_order_data, in_index + 1, size, pre_index + 1);
+
+    root->left = left;
+    root->right = right;
+    result->root = root;
+
+    return result;
+}
