@@ -86,9 +86,9 @@ int* post_order(struct Tree* tree) {
     return result;
 }
 
-int _index_of(int* data, size_t size_data, int target) {
+int _index_of(int* data, int left, int right, int target) {
     int result = -1;
-    for (int i = 0; i < size_data; i++) {
+    for (int i = left; i <= right; i++) {
         if (data[i] == target) {
             result = i;
             break;
@@ -97,37 +97,54 @@ int _index_of(int* data, size_t size_data, int target) {
     return result;
 }
 
-struct Node* _build(int* pre_order_data, int* in_order_data, int left, int right, int pre_index) {
-    if (left < right) {
-        printf("left: %d - right: %d\n", left, right);
+struct Node* _build(int* pre_order_data, int* in_order_data, int left, int right, int *pre_index) {
+    if (left <= right) {
+        (*pre_index)++;
         int size = right - left + 1;
-        int element = pre_order_data[pre_index];
+        // printf("left: %d - right: %d - size: %d\n", left, right, size);
+        int element = pre_order_data[*pre_index];
+        // printf("Getting element: %d at %d index\n", element, *pre_index);
         struct Node* root = create_node(element);
-        int in_index = _index_of(in_order_data, size, element);
+        int in_index = _index_of(in_order_data, left, right, element);
+        // printf("Find in order: %d\n", in_index);
 
-        struct Node* left = _build(pre_order_data, in_order_data, pre_index, in_index - 1, pre_index + 1);
-        struct Node* right = _build(pre_order_data, in_order_data, in_index + 1, size, pre_index + 1);
+        struct Node* left_node = _build(pre_order_data, in_order_data, left, in_index - 1, pre_index);
+        struct Node* right_node = _build(pre_order_data, in_order_data, in_index + 1, right, pre_index);
+        
+        if (left_node != NULL) {
+            // printf("left: %d\n", left_node->value);
+            root->left = left_node;
+        }
+        if (right_node != NULL) {
+            // printf("right: %d\n", right_node->value);
+            root->right = right_node;
+        }
 
-        if (left != NULL) root->left = left;
-        if (right != NULL) root->right = right;
         return root;
-    }   
+    }
+    return NULL;
 }
 
 struct Tree* build_tree_from_pre_and_in_order(int* pre_order_data, int* in_order_data, size_t size) {
     struct Tree* result = create_binary_tree();
 
-    int pre_index = 0, in_index = 0;
+    int pre_index = 0;
 
     int element = pre_order_data[pre_index];
     struct Node* root = create_node(element);
-    in_index = _index_of(in_order_data, size, element);
+    int in_index = _index_of(in_order_data, 0, size - 1, element);
 
-    struct Node* left = _build(pre_order_data, in_order_data, 0, in_index - 1, pre_index + 1);
-    struct Node* right = _build(pre_order_data, in_order_data, in_index + 1, size, pre_index + 1);
+    struct Node* left = _build(pre_order_data, in_order_data, 0, in_index - 1, &pre_index);
+    struct Node* right = _build(pre_order_data, in_order_data, in_index + 1, size - 1, &pre_index);
 
-    root->left = left;
-    root->right = right;
+    if (left != NULL) {
+        // printf("left final: %d\n", left->value);
+        root->left = left;
+    }
+    if (right != NULL) {
+        // printf("right final: %d\n", right->value);
+        root->right = right;
+    }
     result->root = root;
 
     return result;

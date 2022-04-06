@@ -93,5 +93,13 @@ int main() {
         assert(tree->root->right->left->value == 6);
     }
 
+    { // should build tree from in order and pre order with one element
+        int in_order_data[] = {1};
+        int pre_order_data[] = {1};
+        struct Tree* tree = build_tree_from_pre_and_in_order(pre_order_data, in_order_data, 1);
+        assert(tree->root->value == 1);
+        assert(tree->root->left == NULL);
+        assert(tree->root->right == NULL);
+    }   
     return 0;
 }
