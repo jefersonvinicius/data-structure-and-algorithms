@@ -101,5 +101,23 @@ int main() {
         assert(tree->root->left == NULL);
         assert(tree->root->right == NULL);
     }   
+
+    { // should build tree from expression
+        struct TreeChar* tree = build_tree_expression("4 * a - ( 6 + b ) + 8 / ( 9 - 7 )");
+        assert(tree->root->value == '+');
+        assert(tree->root->left->value == '-');
+        assert(tree->root->right->value == '/');
+        assert(tree->root->left->left->value == '*');    
+        assert(tree->root->left->right->value == '+');   
+        assert(tree->root->right->left->value == '8'); 
+        assert(tree->root->right->right->value == '-');
+        assert(tree->root->left->left->left->value == '4'); 
+        assert(tree->root->left->left->right->value == 'a');
+        assert(tree->root->left->right->left->value == '6');   
+        assert(tree->root->left->right->right->value == 'b');
+        assert(tree->root->right->right->left->value == '9');   
+        assert(tree->root->right->right->right->value == '7');   
+
+    }
     return 0;
 }

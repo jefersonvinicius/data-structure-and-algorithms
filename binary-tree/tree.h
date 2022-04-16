@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "stack/stack.h"
 
 struct Node {
     int value;
@@ -20,6 +21,29 @@ struct Tree {
 
 struct Tree* create_binary_tree() {
     struct Tree* tree = (struct Tree*) malloc(sizeof(struct Tree*));
+    return tree; 
+}
+
+struct NodeChar {
+    char value;
+    struct NodeChar* right;
+    struct NodeChar* left;
+};
+
+struct NodeChar* create_node_char(char value) {
+    struct NodeChar* node = (struct NodeChar*) malloc(sizeof(struct NodeChar));
+    node->value = value;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+struct TreeChar {
+    struct NodeChar* root;
+};
+
+struct TreeChar* create_binary_tree_char() {
+    struct TreeChar* tree = (struct TreeChar*) malloc(sizeof(struct TreeChar*));
     return tree; 
 }
 
@@ -100,25 +124,15 @@ int _index_of(int* data, int left, int right, int target) {
 struct Node* _build(int* pre_order_data, int* in_order_data, int left, int right, int *pre_index) {
     if (left <= right) {
         (*pre_index)++;
-        int size = right - left + 1;
-        // printf("left: %d - right: %d - size: %d\n", left, right, size);
         int element = pre_order_data[*pre_index];
-        // printf("Getting element: %d at %d index\n", element, *pre_index);
         struct Node* root = create_node(element);
         int in_index = _index_of(in_order_data, left, right, element);
-        // printf("Find in order: %d\n", in_index);
 
         struct Node* left_node = _build(pre_order_data, in_order_data, left, in_index - 1, pre_index);
         struct Node* right_node = _build(pre_order_data, in_order_data, in_index + 1, right, pre_index);
         
-        if (left_node != NULL) {
-            // printf("left: %d\n", left_node->value);
-            root->left = left_node;
-        }
-        if (right_node != NULL) {
-            // printf("right: %d\n", right_node->value);
-            root->right = right_node;
-        }
+        if (left_node != NULL) root->left = left_node;
+        if (right_node != NULL) root->right = right_node;
 
         return root;
     }
@@ -137,15 +151,47 @@ struct Tree* build_tree_from_pre_and_in_order(int* pre_order_data, int* in_order
     struct Node* left = _build(pre_order_data, in_order_data, 0, in_index - 1, &pre_index);
     struct Node* right = _build(pre_order_data, in_order_data, in_index + 1, size - 1, &pre_index);
 
-    if (left != NULL) {
-        // printf("left final: %d\n", left->value);
-        root->left = left;
-    }
-    if (right != NULL) {
-        // printf("right final: %d\n", right->value);
-        root->right = right;
-    }
+    if (left != NULL) root->left = left;
+    if (right != NULL) root->right = right;
+    
     result->root = root;
 
     return result;
+}
+
+int is_operator(char c) {
+    return c == '+' || c == '-' || c == '/' || c == '*';
+}
+
+struct TreeChar* build_tree_expression(char* expression) {
+    struct NodeChar* root = NULL;
+    struct StackNode* stack = NULL;
+
+    for (int i = 0; i < strlen(expression); i++) {
+        if (expression[i] == ' ') continue;
+
+        if (is_operator(expression[i])) {
+            struct StackNode* a = pop(stack);
+            struct StackNode* b = pop(stack);
+            struct Node* node = create_node_char(expression[i]);
+            node->left = create_node_char(a->data);
+            node->right = create_node_char(b->data);
+            if (root == NULL) {
+                root = node;
+            } else {
+                root = node->left;
+            }
+        } else {
+            if (stack == NULL) {
+                stack = new_stack_node(expression[i]);
+            } else {
+                push(stack, expression[i]);
+            }
+        }
+    }
+    
+    struct TreeChar* tree = create_binary_tree_char();
+    tree->root = root;
+
+    return tree;
 }
