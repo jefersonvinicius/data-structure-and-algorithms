@@ -103,6 +103,7 @@ int main() {
     }   
 
     { // should build tree from expression
+        
         struct TreeChar* tree = build_tree_expression("4 * a - ( 6 + b ) + 8 / ( 9 - 7 )");
         assert(tree->root->value == '+');
         assert(tree->root->left->value == '-');

@@ -1,5 +1,6 @@
 #include <stdlib.h>
-#include "stack/stack.h"
+#include <stdio.h>
+#include "math/algorithms.h"
 
 struct Node {
     int value;
@@ -164,34 +165,13 @@ int is_operator(char c) {
 }
 
 struct TreeChar* build_tree_expression(char* expression) {
-    struct NodeChar* root = NULL;
-    struct StackNode* stack = NULL;
-
-    for (int i = 0; i < strlen(expression); i++) {
-        if (expression[i] == ' ') continue;
-
-        if (is_operator(expression[i])) {
-            struct StackNode* a = pop(stack);
-            struct StackNode* b = pop(stack);
-            struct Node* node = create_node_char(expression[i]);
-            node->left = create_node_char(a->data);
-            node->right = create_node_char(b->data);
-            if (root == NULL) {
-                root = node;
-            } else {
-                root = node->left;
-            }
-        } else {
-            if (stack == NULL) {
-                stack = new_stack_node(expression[i]);
-            } else {
-                push(stack, expression[i]);
-            }
-        }
-    }
     
+    const char* postfix = infix_to_postfix(expression);
+
+    printf("postfix: %s\n", postfix);
+
     struct TreeChar* tree = create_binary_tree_char();
-    tree->root = root;
+    
 
     return tree;
 }
