@@ -103,7 +103,6 @@ int main() {
     }   
 
     { // should build tree from expression
-        
         struct TreeChar* tree = build_tree_expression("4 * a - ( 6 + b ) + 8 / ( 9 - 7 )");
         assert(tree->root->value == '+');
         assert(tree->root->left->value == '-');
@@ -118,7 +117,13 @@ int main() {
         assert(tree->root->left->right->right->value == 'b');
         assert(tree->root->right->right->left->value == '9');   
         assert(tree->root->right->right->right->value == '7');   
-
     }
+
+    { // should evaluate tree expression correctly
+        int result = solve_tree_expression("1 + 2 * 2 - 1 + (10 / 2 + 1)");
+        printf("result: %d\n", result);
+        assert(result == 10);
+    }
+
     return 0;
 }

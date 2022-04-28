@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include "stack/stackfortree.h"
 #include "math/algorithms.h"
 
 struct Node {
@@ -24,12 +26,6 @@ struct Tree* create_binary_tree() {
     struct Tree* tree = (struct Tree*) malloc(sizeof(struct Tree*));
     return tree; 
 }
-
-struct NodeChar {
-    char value;
-    struct NodeChar* right;
-    struct NodeChar* left;
-};
 
 struct NodeChar* create_node_char(char value) {
     struct NodeChar* node = (struct NodeChar*) malloc(sizeof(struct NodeChar));
@@ -63,6 +59,10 @@ int tree_size(struct Tree* tree) {
     return size;
 }
 
+void print_tree(struct TreeChar* tree) {
+    
+}
+
 void _in_order_recursion(struct Node* root, int* result, int* index) {  
     if (root == NULL) return;
     
@@ -74,7 +74,7 @@ void _in_order_recursion(struct Node* root, int* result, int* index) {
 
 int* in_order(struct Tree* tree) {
     int index = 0;
-    int* result = malloc(sizeof(int) * tree_size(tree));
+    int* result = (int*) malloc(sizeof(int) * tree_size(tree));
     _in_order_recursion(tree->root, result, &index);
     return result;
 }
@@ -90,7 +90,7 @@ void _pre_order_recursion(struct Node* root, int* result, int* index) {
 
 int* pre_order(struct Tree* tree) {
     int index = 0;
-    int* result = malloc(sizeof(int) * tree_size(tree));
+    int* result = (int*) malloc(sizeof(int) * tree_size(tree));
     _pre_order_recursion(tree->root, result, &index);
     return result;
 }
@@ -106,7 +106,7 @@ void _post_order_recursion(struct Node* root, int* result, int* index) {
 
 int* post_order(struct Tree* tree) {
     int index = 0;
-    int* result = malloc(sizeof(int) * tree_size(tree));
+    int* result = (int*) malloc(sizeof(int) * tree_size(tree));
     _post_order_recursion(tree->root, result, &index);
     return result;
 }
@@ -160,7 +160,7 @@ struct Tree* build_tree_from_pre_and_in_order(int* pre_order_data, int* in_order
     return result;
 }
 
-int is_operator(char c) {
+int _is_operator(char c) {
     return c == '+' || c == '-' || c == '/' || c == '*';
 }
 
@@ -168,10 +168,62 @@ struct TreeChar* build_tree_expression(char* expression) {
     
     const char* postfix = infix_to_postfix(expression);
 
-    printf("postfix: %s\n", postfix);
+    struct StackTreeNode* stack = NULL;
+    for (int i = 0; i < strlen(postfix); i++) {
+        char current = postfix[i]; 
+
+        if (_is_operator(current)) {
+            struct NodeChar* pop1 = stacktree_pop(&stack);
+            struct NodeChar* pop2 = stacktree_pop(&stack);
+            struct NodeChar* root = create_node_char(current);
+            root->left = pop2;
+            root->right = pop1;
+            stacktree_push(&stack, root);
+        } else {
+            stacktree_push(&stack, create_node_char(current));
+        }
+    }
 
     struct TreeChar* tree = create_binary_tree_char();
-    
+    tree->root = stacktree_top(stack);    
 
     return tree;
+}
+
+int _calculate(int a, int b, char operator) {
+    printf("Calculating: %d %c %d\n", a, b, operator);
+    switch (operator)
+    {
+        case '+':
+            return a + b;
+            break;
+        case '-':
+            return a - b;
+            break;
+        case '*':
+            return a * b;
+            break;
+        case '/':
+            return a / b;
+            break;
+        default:
+            break;
+    }
+}
+
+int _solve_part(struct NodeChar* node) {
+    if (node != NULL) {
+        if (!_is_operator(node->value))
+            return node->value - '0';
+
+        int a = _solve_part(node->left);
+        int b = _solve_part(node->right);
+
+        return _calculate(a, b, node->value);
+    }
+}
+
+int solve_tree_expression(char* expression) {
+    struct TreeChar* tree = build_tree_expression(expression);
+    return _solve_part(tree->root);
 }
