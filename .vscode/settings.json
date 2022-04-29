@@ -15,6 +15,13 @@
         "limits": "c",
         "streambuf": "c",
         "memory": "c",
-        "measure.h": "c"
+        "measure.h": "c",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "stackfortree.h": "c",
+        "nodechar.h": "c",
+        "algorithms.h": "c",
+        "charstack.h": "c"
     }
 }

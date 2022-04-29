@@ -119,10 +119,27 @@ int main() {
         assert(tree->root->right->right->right->value == '7');   
     }
 
+    { // should build tree from expression with number bigger then 1
+        struct TreeChar* tree = build_tree_expression("40 * a - ( 600 + b ) + 8540 / ( 90 - 7 )");
+        assert(tree->root->value == '+');
+        assert(tree->root->left->value == '-');
+        assert(tree->root->right->value == '/');
+        assert(tree->root->left->left->value == '*');    
+        assert(tree->root->left->right->value == '+');   
+        assert(tree->root->right->left->value == '8540'); 
+        assert(tree->root->right->right->value == '-');
+        assert(tree->root->left->left->left->value == '40'); 
+        assert(tree->root->left->left->right->value == 'a');
+        assert(tree->root->left->right->left->value == '600');   
+        assert(tree->root->left->right->right->value == 'b');
+        assert(tree->root->right->right->left->value == '90');   
+        assert(tree->root->right->right->right->value == '7');   
+    }
+
+
     { // should evaluate tree expression correctly
-        int result = solve_tree_expression("1 + 2 * 2 - 1 + (10 / 2 + 1)");
-        printf("result: %d\n", result);
-        assert(result == 10);
+        int result = solve_expression_with_tree("1 + 2 * 2 - 1 + (6 / 2 + 1)");
+        assert(result == 8);
     }
 
     return 0;

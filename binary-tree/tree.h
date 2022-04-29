@@ -60,7 +60,7 @@ int tree_size(struct Tree* tree) {
 }
 
 void print_tree(struct TreeChar* tree) {
-    
+    // TODO
 }
 
 void _in_order_recursion(struct Node* root, int* result, int* index) {  
@@ -191,7 +191,6 @@ struct TreeChar* build_tree_expression(char* expression) {
 }
 
 int _calculate(int a, int b, char operator) {
-    printf("Calculating: %d %c %d\n", a, b, operator);
     switch (operator)
     {
         case '+':
@@ -213,8 +212,9 @@ int _calculate(int a, int b, char operator) {
 
 int _solve_part(struct NodeChar* node) {
     if (node != NULL) {
-        if (!_is_operator(node->value))
+        if (!_is_operator(node->value)) {
             return node->value - '0';
+        } 
 
         int a = _solve_part(node->left);
         int b = _solve_part(node->right);
@@ -223,7 +223,7 @@ int _solve_part(struct NodeChar* node) {
     }
 }
 
-int solve_tree_expression(char* expression) {
+int solve_expression_with_tree(char* expression) {
     struct TreeChar* tree = build_tree_expression(expression);
     return _solve_part(tree->root);
 }
