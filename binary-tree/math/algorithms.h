@@ -7,7 +7,6 @@ int _char_is_letter(char c) {
 
 
 int _get_operator_precedence(char operator) {
-    // printf("OPERATOR: %c %d\n", operator, operator == '+');
     if (operator == '+' || operator == '-') return 1;
     if (operator == '*' || operator == '/') return 2;
     if (operator == '^') return 3;
@@ -15,7 +14,6 @@ int _get_operator_precedence(char operator) {
 }
 
 void _append_str(char *post_fix[], char *to_append, int* current_postfix_index) {
-    printf("Apeending: %s\n", to_append);
     post_fix[*current_postfix_index] = to_append;
     (*current_postfix_index)++;
 }
@@ -23,8 +21,9 @@ void _append_str(char *post_fix[], char *to_append, int* current_postfix_index) 
 void _pop_until_last_left_parentesis(struct StackNode **stack, char *post_fix[], int *current_postfix_index) {
     while (!is_empty(*stack)) {
         char* popped = pop(stack);
-        printf("Popped: %s\n", popped);
-        if (strcmp(popped, "(") == 0) break;
+        if (strcmp(popped, "(") == 0) {
+            break;
+        }
         _append_str(post_fix, popped, current_postfix_index);
     }
 }
@@ -50,7 +49,14 @@ char* _extract_number_digits(const char* str, int start_index) {
 
 #define STRING_MAX 100
 
-char** infix_to_postfix(const char* infix_expression) {
+struct PostFixResult
+{
+    char** postfix;
+    int size;
+};
+
+
+struct PostFixResult* infix_to_postfix(const char* infix_expression) {
     int postfix_index = 0;
     char **post_fix;
     post_fix = malloc(strlen(infix_expression) * sizeof(char*));
@@ -64,32 +70,29 @@ char** infix_to_postfix(const char* infix_expression) {
         if (current_char == ' ') continue;
 
         if (_char_is_letter(current_char)) {
-            printf("%c is letter\n", current_char);
-            _append_str(post_fix, &current_char, &postfix_index);
+            char* to_append = malloc(sizeof(char));
+            to_append[0] = current_char;
+            _append_str(post_fix, to_append, &postfix_index);
         } else if (isdigit(current_char)) {
-            printf("%c is digit\n", current_char);
             char* extracted = _extract_number_digits(infix_expression, i);
             i += (strlen(extracted) - 1);
-            printf("extracted: %s len(%ld)\n", extracted, strlen(extracted));
             _append_str(post_fix, extracted, &postfix_index);
         } else if (current_char == '(') {
             push(&stack, current_char);
         } else if (current_char == ')') {
-            // printf("Aqui1\n");
-            printf("START Popping\n");
             _pop_until_last_left_parentesis(&stack, post_fix, &postfix_index);
-            printf("END Popping\n");
         } else {
-            // printf("Aqui2\n");
             _pop_until_find_operator_have_less_precedence_than_current_operator_and_push_it(current_char, &stack, post_fix, &postfix_index);   
         }
     }
 
-    // printf("Saiu\n");
-
     while (!is_empty(stack)) {
         _append_str(post_fix, pop(&stack), &postfix_index);
     }
+
+    struct PostFixResult* result = malloc(sizeof(struct PostFixResult));
+    result->postfix = post_fix;
+    result->size = postfix_index;
     
-    return post_fix;
+    return result;
 }

@@ -27,7 +27,7 @@ struct Tree* create_binary_tree() {
     return tree; 
 }
 
-struct NodeChar* create_node_char(char value) {
+struct NodeChar* create_node_char(char* value) {
     struct NodeChar* node = (struct NodeChar*) malloc(sizeof(struct NodeChar));
     node->value = value;
     node->left = NULL;
@@ -160,17 +160,19 @@ struct Tree* build_tree_from_pre_and_in_order(int* pre_order_data, int* in_order
     return result;
 }
 
-int _is_operator(char c) {
-    return c == '+' || c == '-' || c == '/' || c == '*';
+int _is_operator(char* c) {
+    return *c == '+' || *c == '-' || *c == '/' || *c == '*';
 }
 
 struct TreeChar* build_tree_expression(char* expression) {
     
-    const char* postfix = infix_to_postfix(expression);
+    struct PostFixResult* postfix_result = infix_to_postfix(expression);
+
+    char** postfix = postfix_result->postfix;
 
     struct StackTreeNode* stack = NULL;
-    for (int i = 0; i < strlen(postfix); i++) {
-        char current = postfix[i]; 
+    for (int i = 0; i < postfix_result->size; i++) {
+        char* current = postfix[i]; 
 
         if (_is_operator(current)) {
             struct NodeChar* pop1 = stacktree_pop(&stack);
@@ -213,13 +215,13 @@ int _calculate(int a, int b, char operator) {
 int _solve_part(struct NodeChar* node) {
     if (node != NULL) {
         if (!_is_operator(node->value)) {
-            return node->value - '0';
+            return atoi(node->value);
         } 
 
         int a = _solve_part(node->left);
         int b = _solve_part(node->right);
 
-        return _calculate(a, b, node->value);
+        return _calculate(a, b, *node->value);
     }
 }
 

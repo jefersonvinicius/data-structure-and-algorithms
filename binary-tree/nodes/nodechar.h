@@ -1,6 +1,6 @@
 
 struct NodeChar {
-    char value;
+    char* value;
     struct NodeChar* right;
     struct NodeChar* left;
 };
