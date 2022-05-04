@@ -81,6 +81,44 @@ int main() {
         assertArray(result, expected, 6);
     }
 
+    { // should get level order transversal correctly
+        struct Tree* tree = create_binary_tree();
+        tree->root = create_node(1);
+        tree->root->left = create_node(2);
+        tree->root->right = create_node(8);
+        tree->root->left->left = create_node(4);
+        tree->root->left->right = create_node(5);
+        tree->root->right->left = create_node(6);
+
+        int* result = level_order(tree);
+        int expected[] = {1, 2, 8, 4, 5, 6};
+        assertArray(result, expected, 6);
+    }
+
+    { // should get the height of binary tree
+        struct Tree* tree = create_binary_tree();
+        tree->root = create_node(1);
+        tree->root->left = create_node(2);
+        tree->root->right = create_node(8);
+        tree->root->left->left = create_node(4);
+        tree->root->left->right = create_node(5);
+        tree->root->right->left = create_node(6);
+        tree->root->right->left->left = create_node(7);
+        tree->root->right->left->left->left = create_node(8);
+
+        printf("result: %d\n", tree_height(tree));
+        assert(tree_height(tree) == 5);
+
+        tree->root = create_node(1);
+        assert(tree_height(tree) == 1);
+
+        tree->root = create_node(1);
+        tree->root->left = create_node(1);
+        tree->root->left->left = create_node(1);
+        tree->root->left->left->left = create_node(1);
+        assert(tree_height(tree) == 4);
+    }
+
     { // should build tree from in order and pre order
         int in_order_data[] = {4, 2, 5, 1, 6, 3};
         int pre_order_data[] = {1, 2, 4, 5, 3, 6};

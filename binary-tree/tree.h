@@ -122,6 +122,38 @@ int _index_of(int* data, int left, int right, int target) {
     return result;
 }
 
+int _max_depth(struct Node* node) {
+    if (node == NULL) return -1;
+    
+    int max_right = _max_depth(node->right);
+    int max_left = _max_depth(node->left);
+    return (max_left > max_right ? max_left : max_right) + 1;
+}
+
+int tree_height(struct Tree* tree) {
+    return _max_depth(tree->root) + 1;
+}
+
+void _current_level(struct Node* node, int level, int* result, int* result_index) {
+    if (node == NULL) return;
+    if (level == 1) {
+        result[*result_index] = node->value;
+        (*result_index)++;
+    } else if (level > 1) {
+        _current_level(node->left, level - 1, result, result_index);
+        _current_level(node->right, level - 1, result, result_index);
+    }
+}
+
+int* level_order(struct Tree* tree) {
+    int* result = malloc(sizeof(int) * tree_size(tree) + sizeof(int));
+    int result_index = 0;
+    for (int i = 1; i <= tree_height(tree); i++) {
+        _current_level(tree->root, i, result, &result_index);
+    }
+    return result;
+}
+
 struct Node* _build(int* pre_order_data, int* in_order_data, int left, int right, int *pre_index) {
     if (left <= right) {
         (*pre_index)++;
