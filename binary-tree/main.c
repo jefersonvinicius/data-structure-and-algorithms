@@ -106,7 +106,6 @@ int main() {
         tree->root->right->left->left = create_node(7);
         tree->root->right->left->left->left = create_node(8);
 
-        printf("result: %d\n", tree_height(tree));
         assert(tree_height(tree) == 5);
 
         tree->root = create_node(1);
@@ -174,7 +173,6 @@ int main() {
         assert(strcmp(tree->root->right->right->right->value, "7") == 0);   
     }
 
-
     { // should evaluate tree expression correctly
         int result = solve_expression_with_tree("1 + 2 * 2 - 1 + (6 / 2 + 1)");
         assert(result == 8);
@@ -189,9 +187,19 @@ int main() {
     }
 
     { // should print the tree correctly
-        struct TreeChar* tree = build_tree_expression("40 * a - ( 600 + b ) + 8540 / ( 90 - 7 )");
-        printf("Printing tree:\n");
+        struct TreeChar* tree = create_binary_tree_char();
+        tree->root = create_node_char("A");
+        tree->root->left = create_node_char("B");
+        tree->root->right = create_node_char("C");
+        tree->root->left->left = create_node_char("D");
+        tree->root->left->right = create_node_char("E");
+        tree->root->right->left = create_node_char("F");
+        tree->root->right->right = create_node_char("G");
+        tree->root->left->left->left = create_node_char("H");
         print_tree(tree);
+        // struct TreeChar* tree = build_tree_expression("40 * a - ( 600 + b ) + 8540 / ( 90 - 7 )");
+        // printf("Printing tree:\n");
+        // print_tree(tree);
     }
 
     return 0;

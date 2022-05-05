@@ -59,8 +59,53 @@ int tree_size(struct Tree* tree) {
     return size;
 }
 
+int _maxchar_depth(struct NodeChar* node) {
+    if (node == NULL) return -1;
+    
+    int max_right = _maxchar_depth(node->right);
+    int max_left = _maxchar_depth(node->left);
+    return (max_left > max_right ? max_left : max_right) + 1;
+}
+
+int treechar_height(struct TreeChar* tree) {
+    return _maxchar_depth(tree->root) + 1;
+}
+
+void _print_level(struct NodeChar* node, int level, int original_level, char** levels) {
+    if (node == NULL) return;
+
+    if (level == 1) {
+        char *c = malloc(strlen(node->value) * sizeof(char));
+        strcat(c, node->value);
+        strcat(c, "&");
+        strcat(levels[original_level - 1], c);
+    } else if (level > 1) {
+        _print_level(node->left, level - 1, original_level, levels);
+        _print_level(node->right, level - 1, original_level, levels);
+    }
+}
+
 void print_tree(struct TreeChar* tree) {
-    // TODO
+    int tree_height = treechar_height(tree);
+    char** levels = malloc(tree_height * sizeof(char*));
+    for (int i = 0; i < tree_height; i++) {
+        levels[i] = malloc(100 * sizeof(char));
+    }
+
+    for (int i = 1; i <= tree_height; i++) {
+        _print_level(tree->root, i, i, levels);
+    }
+
+    for (int i = 0; i < tree_height; i++) {
+        printf("Level %d: %s\n", i+1, levels[i]);
+        char* part;
+        part = strtok(levels[i], "&");
+
+        while (part != NULL) {
+            printf("Part: %s\n", part);
+            part = strtok(NULL, "&");
+        }
+    }
 }
 
 void _in_order_recursion(struct Node* root, int* result, int* index) {  
