@@ -197,9 +197,6 @@ int main() {
         tree->root->right->right = create_node_char("G");
         tree->root->left->left->left = create_node_char("H");
         print_tree(tree);
-        // struct TreeChar* tree = build_tree_expression("40 * a - ( 600 + b ) + 8540 / ( 90 - 7 )");
-        // printf("Printing tree:\n");
-        // print_tree(tree);
     }
 
     return 0;

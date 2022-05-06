@@ -85,27 +85,25 @@ void _print_level(struct NodeChar* node, int level, int original_level, char** l
     }
 }
 
+#define SPACES_COUNT 10
+
+void _print(struct NodeChar* node, int spaces) {
+    if (node == NULL)
+        return;
+
+    spaces += SPACES_COUNT;
+    _print(node->right, spaces);
+
+    printf("\n");
+    for (int i = 0; i < spaces; i++) 
+        printf(" ");
+    printf("%s\n", node->value);
+
+    _print(node->left, spaces);
+}
+
 void print_tree(struct TreeChar* tree) {
-    int tree_height = treechar_height(tree);
-    char** levels = malloc(tree_height * sizeof(char*));
-    for (int i = 0; i < tree_height; i++) {
-        levels[i] = malloc(100 * sizeof(char));
-    }
-
-    for (int i = 1; i <= tree_height; i++) {
-        _print_level(tree->root, i, i, levels);
-    }
-
-    for (int i = 0; i < tree_height; i++) {
-        printf("Level %d: %s\n", i+1, levels[i]);
-        char* part;
-        part = strtok(levels[i], "&");
-
-        while (part != NULL) {
-            printf("Part: %s\n", part);
-            part = strtok(NULL, "&");
-        }
-    }
+    _print(tree->root, 0);    
 }
 
 void _in_order_recursion(struct Node* root, int* result, int* index) {  
