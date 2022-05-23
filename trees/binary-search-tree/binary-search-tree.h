@@ -24,6 +24,21 @@ struct Node* create_node(int value) {
     return node;
 }
 
+void _insert_at_node(struct Node* node, int value) {
+    if (value > node->value) {
+        if (node->right == NULL) node->right = create_node(value);
+        else _insert_at_node(node->right, value);
+    } else {
+        if (node->left == NULL) node->left = create_node(value);
+        else _insert_at_node(node->left, value);
+    }
+}
+
 void bst_insert(struct BinarySearchTree* tree, int value) {
-    tree->root = create_node(value);
+    if (tree->root == NULL) {
+        tree->root = create_node(value);
+        return;
+    }
+
+    _insert_at_node(tree->root, value);
 }
