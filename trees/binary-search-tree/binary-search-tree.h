@@ -42,3 +42,13 @@ void bst_insert(struct BinarySearchTree* tree, int value) {
 
     _insert_at_node(tree->root, value);
 }
+
+struct Node* _search(struct Node* node, int target) {
+    if (node == NULL || node->value == target) return node;
+    if (target > node->value) return _search(node->right, target);
+    return _search(node->left, target);
+}
+
+struct Node* bst_search(struct BinarySearchTree* tree, int target) {
+    return _search(tree->root, target);
+}
