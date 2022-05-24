@@ -52,3 +52,34 @@ struct Node* _search(struct Node* node, int target) {
 struct Node* bst_search(struct BinarySearchTree* tree, int target) {
     return _search(tree->root, target);
 }
+
+void _inorder(struct Node* node, int* result, int* index) {
+    if (node != NULL) {
+        _inorder(node->left, result, index);
+        result[*index] = node->value;
+        (*index)++;
+        _inorder(node->right, result, index);
+    }
+}
+
+int* bst_inorder(struct BinarySearchTree* tree) {
+    int* result = malloc(sizeof(int) * 10000);
+    int index = 0;
+    _inorder(tree->root, result, &index);
+    return result;
+}
+
+void _delete(struct Node** node, int target) {
+    // printf("%d - %d\n", (*node)->value, target);
+    if ((*node)->value == target) {
+        (*node) = NULL;
+    } else if ((*node)->left != NULL && (*node)->left->value <= target) {
+        _delete(&(*node)->left, target);
+    } else if ((*node)->right != NULL) {
+        _delete(&(*node)->right, target);
+    }
+}
+
+void bst_delete(struct BinarySearchTree* tree, int value) {
+    _delete(&tree->root, value);
+}
