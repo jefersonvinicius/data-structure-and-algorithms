@@ -43,6 +43,12 @@ void bst_insert(struct BinarySearchTree* tree, int value) {
     _insert_at_node(tree->root, value);
 }
 
+void bst_insert_many(struct BinarySearchTree* tree, int* values, size_t values_size) {
+    for (int i = 0; i < values_size; i++) {
+        bst_insert(tree, values[i]);
+    }
+}
+
 struct Node* _search(struct Node* node, int target) {
     if (node == NULL || node->value == target) return node;
     if (target > node->value) return _search(node->right, target);
@@ -69,11 +75,36 @@ int* bst_inorder(struct BinarySearchTree* tree) {
     return result;
 }
 
+struct Node* _find_largest_subnode(struct Node* initial) {
+    printf("Checking: %d\n", initial->value);
+    if (initial->right == NULL) return initial;
+    return _find_largest_subnode(initial->right);   
+}
+
 void _delete(struct Node** node, int target) {
-    // printf("%d - %d\n", (*node)->value, target);
     if ((*node)->value == target) {
-        (*node) = NULL;
-    } else if ((*node)->left != NULL && (*node)->left->value <= target) {
+        if ((*node)->left == NULL && (*node)->right == NULL) {
+            (*node) = NULL;
+        } else if ((*node)->left != NULL && (*node)->right == NULL) {
+            struct Node* tmp = (*node);
+            (*node) = (*node)->left;
+            free(tmp);
+        } else if ((*node)->left == NULL && (*node)->right != NULL) {
+            struct Node* tmp = (*node);
+            (*node) = (*node)->right;
+            free(tmp);
+        } else {
+            printf("Deleting: %d\n", (*node)->value);
+            
+            struct Node* largest = _find_largest_subnode((*node)->left);
+
+            printf("LArgest: %d\n", largest->value);
+            largest->right = (*node)->right; 
+            largest->left = (*node)->left;
+            (*node) = largest;
+            // free(largest);
+        }
+    } else if ((*node)->left != NULL && target <= (*node)->left->value) {
         _delete(&(*node)->left, target);
     } else if ((*node)->right != NULL) {
         _delete(&(*node)->right, target);

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include "../../_utils_/asserts.h"
 #include "./binary-search-tree.h"
 
 int main() {
@@ -93,6 +94,12 @@ int main() {
         assert(tree->root->right->value == 7);
         assert(tree->root->right->left->value == 6);
         assert(tree->root->right->right == NULL);
+    }
+
+    { // should insert many nodes
+        struct BinarySearchTree* tree = create_binary_search_tree();
+        bst_insert_many(tree, (int[]){10,5,20,4,6,7,8,9}, 8);
+        assertArray(bst_inorder(tree), (int[]){4,5,6,7,8,9,10,20}, 8);
     }
 
     return 0;
