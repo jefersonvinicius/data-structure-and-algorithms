@@ -75,16 +75,21 @@ int* bst_inorder(struct BinarySearchTree* tree) {
     return result;
 }
 
-struct Node* _find_largest_subnode(struct Node* initial) {
-    printf("Checking: %d\n", initial->value);
-    if (initial->right == NULL) return initial;
-    return _find_largest_subnode(initial->right);   
+struct Node** _find_largest_subnode(struct Node** initial) {
+    printf("Checking: %d\n", (*initial)->value);
+    if ((*initial)->right == NULL) return initial;
+    return _find_largest_subnode(&(*initial)->right);   
+}
+
+int _has_none_children(struct Node* node) {
+    return node->left == NULL && node->right == NULL;
 }
 
 void _delete(struct Node** node, int target) {
     if ((*node)->value == target) {
-        if ((*node)->left == NULL && (*node)->right == NULL) {
+        if (_has_none_children(*node)) {
             (*node) = NULL;
+            free(*node);
         } else if ((*node)->left != NULL && (*node)->right == NULL) {
             struct Node* tmp = (*node);
             (*node) = (*node)->left;
@@ -94,15 +99,12 @@ void _delete(struct Node** node, int target) {
             (*node) = (*node)->right;
             free(tmp);
         } else {
-            printf("Deleting: %d\n", (*node)->value);
-            
-            struct Node* largest = _find_largest_subnode((*node)->left);
-
-            printf("LArgest: %d\n", largest->value);
-            largest->right = (*node)->right; 
-            largest->left = (*node)->left;
-            (*node) = largest;
-            // free(largest);
+            struct Node** largest = _find_largest_subnode(&(*node)->left);
+            if (_has_none_children(*largest)) {
+                (*node)->value = (*largest)->value;
+                *largest = NULL;
+                free(*largest);
+            }
         }
     } else if ((*node)->left != NULL && target <= (*node)->left->value) {
         _delete(&(*node)->left, target);

@@ -82,15 +82,14 @@ int main() {
 
     { // should delete when node has both left and right children (largest element)
         struct BinarySearchTree* tree = create_binary_search_tree();
-        bst_insert_many(tree, (int[]){10,5,20,4,6,7,8,9}, 8);
+        bst_insert_many(tree, (int[]){10,5,20,4,7,6,8,9}, 8);
         bst_delete(tree, 10);
         assert(tree->root->value == 9);
         assert(tree->root->right->value == 20);
         assert(tree->root->left->value == 5);
-        printf("Here\n");
         assert(tree->root->left->left->value == 4);
-        assert(tree->root->left->right->value == 6);
-        assert(tree->root->left->right->left->value == 7);
+        assert(tree->root->left->right->value == 7);
+        assert(tree->root->left->right->left->value == 6);
         assert(tree->root->left->right->right->value == 8);
         assert(tree->root->left->right->right->right == NULL);
     }
