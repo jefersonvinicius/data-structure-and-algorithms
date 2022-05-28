@@ -80,7 +80,7 @@ int main() {
         assert(tree->root->right->left == NULL);
     }
 
-    { // should delete when node has both left and right children (largest element)
+    { // should delete when node has both left and right children (largest element without children)
         struct BinarySearchTree* tree = create_binary_search_tree();
         bst_insert_many(tree, (int[]){10,5,20,4,7,6,8,9}, 8);
         bst_delete(tree, 10);
@@ -93,6 +93,22 @@ int main() {
         assert(tree->root->left->right->right->value == 8);
         assert(tree->root->left->right->right->right == NULL);
     }
+
+    { // should delete when node has both left and right children (largest element with child)
+        struct BinarySearchTree* tree = create_binary_search_tree();
+        bst_insert_many(tree, (int[]){10,5,20,4,7,6,8,10,9}, 9);
+        bst_delete(tree, 10);
+        assert(tree->root->value == 10);
+        assert(tree->root->right->value == 20);
+        assert(tree->root->left->value == 5);
+        assert(tree->root->left->left->value == 4);
+        assert(tree->root->left->right->value == 7);
+        assert(tree->root->left->right->left->value == 6);
+        assert(tree->root->left->right->right->value == 8);
+        assert(tree->root->left->right->right->right->value == 9);
+        assert(tree->root->left->right->right->right->left == NULL);
+    }
+
 
     return 0;
 }

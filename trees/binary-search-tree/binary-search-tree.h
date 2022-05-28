@@ -76,7 +76,6 @@ int* bst_inorder(struct BinarySearchTree* tree) {
 }
 
 struct Node** _find_largest_subnode(struct Node** initial) {
-    printf("Checking: %d\n", (*initial)->value);
     if ((*initial)->right == NULL) return initial;
     return _find_largest_subnode(&(*initial)->right);   
 }
@@ -85,31 +84,44 @@ int _has_none_children(struct Node* node) {
     return node->left == NULL && node->right == NULL;
 }
 
+int _has_only_left(struct Node* node) {
+    return node->left != NULL && node->right == NULL;
+}
+
+int _has_only_right(struct Node* node) {
+    return node->left == NULL && node->right != NULL;
+}
+
 void _delete(struct Node** node, int target) {
     if ((*node)->value == target) {
         if (_has_none_children(*node)) {
             (*node) = NULL;
             free(*node);
-        } else if ((*node)->left != NULL && (*node)->right == NULL) {
+        } else if (_has_only_left(*node)) {
             struct Node* tmp = (*node);
             (*node) = (*node)->left;
             free(tmp);
-        } else if ((*node)->left == NULL && (*node)->right != NULL) {
+        } else if (_has_only_right(*node)) {
             struct Node* tmp = (*node);
             (*node) = (*node)->right;
             free(tmp);
         } else {
             struct Node** largest = _find_largest_subnode(&(*node)->left);
-            if (_has_none_children(*largest)) {
-                (*node)->value = (*largest)->value;
+            (*node)->value = (*largest)->value;
+            if (_has_none_children(*largest)) {    
                 *largest = NULL;
                 free(*largest);
+            } else {
+                struct Node* left = (*largest)->left;
+                (*largest) = (*largest)->left;
+                left = NULL;
+                free(left);
             }
         }
-    } else if ((*node)->left != NULL && target <= (*node)->left->value) {
-        _delete(&(*node)->left, target);
-    } else if ((*node)->right != NULL) {
+    } else if ((*node)->right != NULL && target > (*node)->value) {
         _delete(&(*node)->right, target);
+    } else if ((*node)->left != NULL) {
+        _delete(&(*node)->left, target);
     }
 }
 
