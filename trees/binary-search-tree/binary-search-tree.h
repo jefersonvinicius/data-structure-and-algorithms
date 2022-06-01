@@ -106,7 +106,7 @@ void _delete(struct Node** node, int target) {
             (*node) = (*node)->right;
             free(tmp);
         } else {
-            struct Node** largest = _find_largest_subnode(&(*node)->left);
+            struct Node** largest = _find_largest_subnode(&(*node)->right);
             (*node)->value = (*largest)->value;
             if (_has_none_children(*largest)) {    
                 *largest = NULL;
