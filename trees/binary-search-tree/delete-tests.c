@@ -93,19 +93,20 @@ int main() {
         assert(tree->root->left->right->right->right->value == 9);
     }
 
-    { // should delete when node has both left and right children (largest element with child)
+    { // should delete when node has both left and right children (min element with child)
         struct BinarySearchTree* tree = create_binary_search_tree();
         bst_insert_many(tree, (int[]){10,5,13,20,15,14}, 6);
         bst_delete(tree, 10);
-        assert(tree->root->value == 20);
+        assert(tree->root->value == 13);
         assert(tree->root->left->value == 5);
-        assert(tree->root->right->value == 13);
-        assert(tree->root->right->right->value == 15);
-        assert(tree->root->right->right->left->value == 14);
-        assert(tree->root->right->right->left->left == NULL);
+        assert(tree->root->right->value == 20);
+        assert(tree->root->right->right == NULL);
+        assert(tree->root->right->left->value == 15);
+        assert(tree->root->right->left->left->value == 14);
+        assert(tree->root->right->left->left->left == NULL);
     }
 
-    { // should delete correctly (1)
+    { // should delete node on right side with one child
         struct BinarySearchTree* tree = create_binary_search_tree();
         bst_insert_many(tree, (int[]){1,2,3,4}, 4);
         bst_delete(tree, 2);
@@ -116,7 +117,7 @@ int main() {
         assert(tree->root->right->right->right == NULL);
     }
 
-    { // should delete correctly (2)
+    { // should delete node on left side with two children 
         struct BinarySearchTree* tree = create_binary_search_tree();
         bst_insert_many(tree, (int[]){4,2,3,1}, 4);
         bst_delete(tree, 2);
@@ -126,6 +127,20 @@ int main() {
         assert(tree->root->left->left->value == 1);
         assert(tree->root->left->right == NULL);
     }
+
+    { // should delete node on right side with two children
+        struct BinarySearchTree* tree = create_binary_search_tree();
+        bst_insert_many(tree, (int[]){4,9,8,10,12,11}, 6);
+        bst_delete(tree, 9);
+
+        assert(tree->root->value == 4);
+        assert(tree->root->right->value == 10);
+        assert(tree->root->right->left->value == 8);
+        assert(tree->root->right->right->value == 12);
+        assert(tree->root->right->right->left->value == 11);
+        assert(tree->root->right->right->right == NULL);
+    }
+
 
 
     return 0;

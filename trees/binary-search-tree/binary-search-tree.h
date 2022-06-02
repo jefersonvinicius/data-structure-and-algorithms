@@ -80,6 +80,11 @@ struct Node** _find_largest_subnode(struct Node** initial) {
     return _find_largest_subnode(&(*initial)->right);   
 }
 
+struct Node** _find_min_subnode(struct Node** initial) {
+    if ((*initial)->left == NULL) return initial;
+    return _find_min_subnode(&(*initial)->left);   
+}
+
 int _has_none_children(struct Node* node) {
     return node->left == NULL && node->right == NULL;
 }
@@ -106,16 +111,16 @@ void _delete(struct Node** node, int target) {
             (*node) = (*node)->right;
             free(tmp);
         } else {
-            struct Node** largest = _find_largest_subnode(&(*node)->right);
-            (*node)->value = (*largest)->value;
-            if (_has_none_children(*largest)) {    
-                *largest = NULL;
-                free(*largest);
+            struct Node** min = _find_min_subnode(&(*node)->right);
+            (*node)->value = (*min)->value;
+            if (_has_none_children(*min)) {    
+                *min = NULL;
+                free(*min);
             } else {
-                struct Node* left = (*largest)->left;
-                (*largest) = (*largest)->left;
-                left = NULL;
-                free(left);
+                struct Node* right = (*min)->right;
+                (*min) = (*min)->right;
+                right = NULL;
+                free(right);
             }
         }
     } else if ((*node)->right != NULL && target > (*node)->value) {
