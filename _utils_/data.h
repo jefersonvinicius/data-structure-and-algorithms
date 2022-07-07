@@ -1,6 +1,10 @@
 #include <stdlib.h>
 
-#define BIG_ARRAY_SIZE 1000 * 1000
+#ifdef TESTING
+#define BIG_ARRAY_SIZE 1000 * 10
+#else
+#define BIG_ARRAY_SIZE 1000 * 100
+#endif
 
 int* generate_big_array() {
     int* array = malloc(sizeof(int) * BIG_ARRAY_SIZE);

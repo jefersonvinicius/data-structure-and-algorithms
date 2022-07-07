@@ -99,7 +99,8 @@ int main() {
     { // should insert many nodes
         struct BinarySearchTree* tree = create_binary_search_tree();
         bst_insert_many(tree, (int[]){10,5,20,4,6,7,8,9}, 8);
-        assertArray(bst_inorder(tree), (int[]){4,5,6,7,8,9,10,20}, 8);
+        int expected[] = {4,5,6,7,8,9,10,20}; 
+        assert_array(bst_inorder(tree), expected, 8);
     }
 
     return 0;

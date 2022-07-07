@@ -17,7 +17,7 @@ int main() {
         bst_insert(tree, 100);
         int* result = bst_inorder(tree);
         int expected[] = {-1, 0, 1, 2, 2, 10, 12, 100};
-        assertArray(result, expected, 8);
+        assert_array(result, expected, 8);
     }
 
     return 0;

@@ -50,7 +50,7 @@ int main() {
 
         int* result = in_order(tree);
         int expected[] = {4, 2, 5, 1, 6, 3};
-        assertArray(result, expected, 6);
+        assert_array(result, expected, 6);
     }
 
     { // should get pre order transversal correctly
@@ -64,7 +64,7 @@ int main() {
 
         int* result = pre_order(tree);
         int expected[] = {1, 2, 4, 5, 3, 6};
-        assertArray(result, expected, 6);
+        assert_array(result, expected, 6);
     }
 
     { // should get post order transversal correctly
@@ -78,7 +78,7 @@ int main() {
 
         int* result = post_order(tree);
         int expected[] = {4, 5, 2, 6, 3, 1};
-        assertArray(result, expected, 6);
+        assert_array(result, expected, 6);
     }
 
     { // should get level order transversal correctly
@@ -92,7 +92,7 @@ int main() {
 
         int* result = level_order(tree);
         int expected[] = {1, 2, 8, 4, 5, 6};
-        assertArray(result, expected, 6);
+        assert_array(result, expected, 6);
     }
 
     { // should get the height of binary tree

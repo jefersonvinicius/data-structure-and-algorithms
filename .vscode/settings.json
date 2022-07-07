@@ -22,6 +22,16 @@
         "stackfortree.h": "c",
         "nodechar.h": "c",
         "algorithms.h": "c",
-        "charstack.h": "c"
+        "charstack.h": "c",
+        "stdio.h": "c",
+        "memory_resource": "c",
+        "ostream": "c",
+        "tuple": "c",
+        "*.tcc": "c",
+        "optional": "c",
+        "numeric": "c",
+        "unistd.h": "c",
+        "assert.h": "c",
+        "quick.h": "c"
     }
 }
