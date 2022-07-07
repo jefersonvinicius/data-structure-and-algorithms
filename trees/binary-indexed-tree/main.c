@@ -72,7 +72,7 @@ int main() {
     { // should insert many
         struct BITree* tree = create_binary_indexed_tree(); 
         int array[] = {0,5,2,9,-3,5,20,10,-7,2,3,-4,0,-2,15,5};
-        int indexed[] =  {0,5,7,9,13,5,25,10,41,2,5,-4,1,-2,13,5}; 
+        int indexed[] = {0,5,7,9,13,5,25,10,41,2,5,-4,1,-2,13,5}; 
         int size = sizeof(int) / sizeof(indexed);
         for (int i = 1; i < 16; i++) bi_insert(tree, array[i]);
 
@@ -81,11 +81,18 @@ int main() {
     }
 
 
-    { // should get sum until index 5
-        // struct BITree* tree = create_binary_indexed_tree();
-        // for (int i = 1; i <= 8; i++) bi_insert(tree, i);
-        // bi_print(tree);
-        // assert(bi_get_sum(tree, 5) == 15);
+    { // should get sum until index 0 (inclusive)
+        struct BITree* tree = create_binary_indexed_tree();
+        for (int i = 1; i <= 8; i++) bi_insert(tree, i);
+        bi_print(tree);
+        assert(bi_get_sum(tree, 0) == 1);
+    }
+
+
+    { // should get sum until index 5 (inclusive)
+        struct BITree* tree = create_binary_indexed_tree();
+        for (int i = 1; i <= 8; i++) bi_insert(tree, i);
+        assert(bi_get_sum(tree, 5) == 21);
     }
 
 
