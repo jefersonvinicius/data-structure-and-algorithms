@@ -42,15 +42,20 @@ int bi_get_sum(struct BITree* tree, int end) {
     return sum;
 }
 
+void bi_update(struct BITree* tree, int index, int value) {
+    int index = end + 1;
+    while (index > 0) {
+        tree->indexed[index] = tree->indexed[index];
+        index -= index & (-index);
+    }
+    return sum;
+}
+
 int bi_print(struct BITree* tree) {
     printf("- BITree -\n");
     printf("Original: ");
-    for (int i = 1; i < tree->size; i++) {
-        printf("%d ", tree->raw[i]);
-    }
+    for (int i = 1; i < tree->size; i++) printf("%d ", tree->raw[i]);
     printf("\nBinary Indexed: ");
-    for (int i = 1; i < tree->size; i++) {
-        printf("%d ", tree->indexed[i]);
-    }
+    for (int i = 1; i < tree->size; i++) printf("%d ", tree->indexed[i]);    
     printf("\n");
 }
