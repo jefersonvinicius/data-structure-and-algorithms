@@ -96,12 +96,12 @@ int main() {
     { // should update correctly
         struct BITree* tree = create_binary_indexed_tree(); 
         int array[] = {0,5,2,9,-3,5,20,10,-7,2,3,-4,0,-2,15,5};
-        int indexed[] = {0,5,7,9,13,5,25,11,41,2,5,-4,1,-2,13,5}; 
+        int indexed[] = {0,5,7,9,13,5,25,19,50,2,5,-4,1,-2,13,5}; 
         for (int i = 1; i < 16; i++) bi_insert(tree, array[i]);
 
-        bi_update(tree, 6, 11);        
-        bi_print(tree);
-        array[7] = 11;
+        bi_update(tree, 6, 9);
+        
+        array[7] = 9;
         assert_array(tree->raw, array, 16);
         assert_array(tree->indexed, indexed, 16);
     }

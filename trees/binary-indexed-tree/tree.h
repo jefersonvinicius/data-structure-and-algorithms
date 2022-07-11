@@ -42,13 +42,14 @@ int bi_get_sum(struct BITree* tree, int end) {
     return sum;
 }
 
-void bi_update(struct BITree* tree, int index, int value) {
-    int index = end + 1;
-    while (index > 0) {
-        tree->indexed[index] = tree->indexed[index];
-        index -= index & (-index);
+void bi_update(struct BITree* tree, int i, int value) {
+    int index = i + 1, n = tree->size;
+    tree->raw[index] = value;
+    while (index <= n) {
+        tree->indexed[index] += value;
+        index += index & (-index);
     }
-    return sum;
+    
 }
 
 int bi_print(struct BITree* tree) {
