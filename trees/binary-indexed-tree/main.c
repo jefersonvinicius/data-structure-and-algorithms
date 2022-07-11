@@ -100,7 +100,7 @@ int main() {
         for (int i = 1; i < 16; i++) bi_insert(tree, array[i]);
 
         bi_update(tree, 6, 9);
-        
+
         array[7] = 9;
         assert_array(tree->raw, array, 16);
         assert_array(tree->indexed, indexed, 16);

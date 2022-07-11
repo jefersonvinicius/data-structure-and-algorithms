@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const childProcess = require('child_process');
+const { execSync } = require('child_process');
 
 const TO_IGNORE = ['.git'];
 
@@ -20,25 +20,44 @@ function findCFiles(initialPath) {
 }
 
 console.log('Finding .c files...');
-const cFiles = findCFiles(process.cwd());
-console.log(`${cFiles.length} .c files found\n`);
+const allFiles = findCFiles(process.cwd());
+console.log(`${allFiles.length} .c files found\n`);
 
-for (const cFile of cFiles) {
-  console.log(`Compiling ${cFile}`);
+const sortedFiles = orderFileByLastModified();
+
+for (const cFile of sortedFiles) {
+  const shortFilename = cFile.replace(process.cwd(), '');
+  console.log(`*** Compiling ${shortFilename}`);
   try {
-    const stdout = childProcess.execSync(`gcc -D TESTING -o ${process.cwd()}/exec ${cFile}`, { stdio: 'pipe' });
-    console.log(stdout.toString());
+    execSync(`gcc -D TESTING -o ${process.cwd()}/exec ${cFile}`, { stdio: 'inherit' });
   } catch (error) {
     console.log(error.message);
     break;
   }
 
-  console.log(`Running ${cFile}`);
+  console.log(`>>> Running ${shortFilename}`);
   try {
-    const stdout = childProcess.execSync(`${process.cwd()}/exec`);
-    console.log(stdout.toString());
+    execSync(`${process.cwd()}/exec`, { stdio: 'inherit' });
   } catch (error) {
     console.log(error.message);
     break;
   }
+
+  console.log('\n');
+}
+
+function orderFileByLastModified() {
+  const filesStats = createFilesStats();
+  return allFiles.sort((fileA, fileB) => {
+    return filesStats[fileB].mtime.getTime() - filesStats[fileA].mtime.getTime();
+  });
+}
+
+function createFilesStats() {
+  const result = {};
+  for (const file of allFiles) {
+    const stat = fs.statSync(file);
+    result[file] = stat;
+  }
+  return result;
 }
