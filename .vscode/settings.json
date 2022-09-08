@@ -32,6 +32,7 @@
         "numeric": "c",
         "unistd.h": "c",
         "assert.h": "c",
-        "quick.h": "c"
+        "quick.h": "c",
+        "sstream": "c"
     }
 }

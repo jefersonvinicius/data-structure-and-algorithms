@@ -49,28 +49,25 @@ char* amgraph_to_string(struct AdjacencyMatrixGraph* graph) {
 
     int header_rows_amount = number_of_zeros;
     char header[header_rows_amount][graph->size];
-    for (int r = 0; r < header_rows_amount; r++) {
+    for (int r = header_rows_amount; r >= 1; r--) {
         for (int i = 0; i < number_of_zeros + 3; i++) strcat(result, " ");
         for (int c = 0; c < graph->size; c++) {
+
             char* column_number_as_str = to_string(c);
-            printf("number: %s\n", column_number_as_str);
-            if (strlen(column_number_as_str) < r + 1) {
+            int length_of_number = strlen(column_number_as_str);
+            if (r > length_of_number) {
                 strcat(result, " ");
             } else {
-                printf("I\n");
-                sprintf(str, "%c", column_number_as_str[r]);
+                sprintf(str, "%c", column_number_as_str[length_of_number-r]);
                 strcat(result, str);
             }
             if (c < graph->size - 1) strcat(result, " ");
         }
-        if (r > 0) strcat(result, "\n");
+        if (r > 1) strcat(result, "\n");
     }
 
-    // if (i == graph->size - 1) sprintf(str, "%d", i);
-    //         else sprintf(str, "%d ", i);
-
-    //         strcat(result, str);
     strcat(result, "\n");
+
 
     for (int r = 0; r < graph->size; r++) {
         sprintf(str, "%0*d [ ", number_of_zeros, r);
@@ -82,6 +79,8 @@ char* amgraph_to_string(struct AdjacencyMatrixGraph* graph) {
         }
         if (r < graph->size - 1) strcat(result, "\n");
     }
+
+
 
     return result;
 }
