@@ -1,5 +1,6 @@
 #include "stdlib.h"
 #include "string.h"
+#include "../../../_utils_/conversions.h"
 
 #define MAX_GRAPH_MATRIX_SIZE 100
 
@@ -41,25 +42,42 @@ void amgraph_print(struct AdjacencyMatrixGraph* graph) {
 }
 
 char* amgraph_to_string(struct AdjacencyMatrixGraph* graph) {
-    char* result = malloc(graph->size * graph->size * graph->size * sizeof(char));
     char str[1000]; 
-    
-    strcat(result, "    ");
-    for (int i = 0; i < graph->size; i++) {
-        if (i == graph->size - 1) sprintf(str, "%d", i);
-        else sprintf(str, "%d ", i);
+    char* result = malloc(graph->size * graph->size * graph->size * sizeof(char));
+    int number_of_zeros = strlen(to_string(graph->size));
 
-        strcat(result, str);
+
+    int header_rows_amount = number_of_zeros;
+    char header[header_rows_amount][graph->size];
+    for (int r = 0; r < header_rows_amount; r++) {
+        for (int i = 0; i < number_of_zeros + 3; i++) strcat(result, " ");
+        for (int c = 0; c < graph->size; c++) {
+            char* column_number_as_str = to_string(c);
+            printf("number: %s\n", column_number_as_str);
+            if (strlen(column_number_as_str) < r + 1) {
+                strcat(result, " ");
+            } else {
+                printf("I\n");
+                sprintf(str, "%c", column_number_as_str[r]);
+                strcat(result, str);
+            }
+            if (c < graph->size - 1) strcat(result, " ");
+        }
+        if (r > 0) strcat(result, "\n");
     }
+
+    // if (i == graph->size - 1) sprintf(str, "%d", i);
+    //         else sprintf(str, "%d ", i);
+
+    //         strcat(result, str);
     strcat(result, "\n");
 
     for (int r = 0; r < graph->size; r++) {
-        sprintf(str, "%d [ ", r);
+        sprintf(str, "%0*d [ ", number_of_zeros, r);
         strcat(result, str);
         for (int c = 0; c < graph->size; c++) {
             sprintf(str, "%d ", __matrix_get(graph, r, c));
             strcat(result, str);
-
             if (c == graph->size - 1) strcat(result, "]");
         }
         if (r < graph->size - 1) strcat(result, "\n");
