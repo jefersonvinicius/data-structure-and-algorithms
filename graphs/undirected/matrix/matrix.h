@@ -28,8 +28,8 @@ void __matrix_set(struct AdjacencyMatrixGraph* graph, int row, int col, int valu
     graph->matrix[row * graph->size + col] = value;
 }
 
-void amgraph_add_edge(struct AdjacencyMatrixGraph* graph, int node1, int node2) {
-    __matrix_set(graph, node1, node2, 1);
+void amgraph_add_edge(struct AdjacencyMatrixGraph* graph, int node1, int node2, int weight) {
+    __matrix_set(graph, node1, node2, weight);
 }
 
 void amgraph_print(struct AdjacencyMatrixGraph* graph) {

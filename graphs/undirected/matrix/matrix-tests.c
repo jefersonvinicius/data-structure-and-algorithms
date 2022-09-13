@@ -13,29 +13,38 @@ int main() {
 
     { // should add edge correctly
         struct AdjacencyMatrixGraph* graph = create_adj_matrix_graph(5);
-        amgraph_add_edge(graph, 1, 2);
-        amgraph_add_edge(graph, 1, 3);
+        amgraph_add_edge(graph, 1, 2, 1);
+        amgraph_add_edge(graph, 1, 3, 1);
 
         assert(__matrix_get(graph, 1, 2) == 1);
         assert(__matrix_get(graph, 1, 3) == 1);
     }
 
+    { // should add edge correctly with weight different of 1
+        struct AdjacencyMatrixGraph* graph = create_adj_matrix_graph(5);
+        amgraph_add_edge(graph, 1, 2, 10);
+        amgraph_add_edge(graph, 1, 3, 8);
+
+        assert(__matrix_get(graph, 1, 2) == 10);
+        assert(__matrix_get(graph, 1, 3) == 8);
+    }
+
     { // should convert to string representation correctly (size less than 10)
         struct AdjacencyMatrixGraph* graph = create_adj_matrix_graph(6);
-        amgraph_add_edge(graph, 1, 2);
-        amgraph_add_edge(graph, 1, 3);
-        amgraph_add_edge(graph, 1, 4);
-        amgraph_add_edge(graph, 2, 1);
-        amgraph_add_edge(graph, 2, 3);
-        amgraph_add_edge(graph, 3, 1);
-        amgraph_add_edge(graph, 3, 2);
-        amgraph_add_edge(graph, 3, 4);
-        amgraph_add_edge(graph, 3, 5);
-        amgraph_add_edge(graph, 4, 1);
-        amgraph_add_edge(graph, 4, 3);
-        amgraph_add_edge(graph, 4, 5);
-        amgraph_add_edge(graph, 5, 3);
-        amgraph_add_edge(graph, 5, 4);
+        amgraph_add_edge(graph, 1, 2, 1);
+        amgraph_add_edge(graph, 1, 3, 1);
+        amgraph_add_edge(graph, 1, 4, 1);
+        amgraph_add_edge(graph, 2, 1, 1);
+        amgraph_add_edge(graph, 2, 3, 1);
+        amgraph_add_edge(graph, 3, 1, 1);
+        amgraph_add_edge(graph, 3, 2, 1);
+        amgraph_add_edge(graph, 3, 4, 1);
+        amgraph_add_edge(graph, 3, 5, 1);
+        amgraph_add_edge(graph, 4, 1, 1);
+        amgraph_add_edge(graph, 4, 3, 1);
+        amgraph_add_edge(graph, 4, 5, 1);
+        amgraph_add_edge(graph, 5, 3, 1);
+        amgraph_add_edge(graph, 5, 4, 1);
         
         char* expected = "    0 1 2 3 4 5\n\
 0 [ 0 0 0 0 0 0 ]\n\
@@ -52,20 +61,20 @@ int main() {
 
     { // should convert to string representation correctly (size greater than 10)
         struct AdjacencyMatrixGraph* graph = create_adj_matrix_graph(12);
-        amgraph_add_edge(graph, 1, 2);
-        amgraph_add_edge(graph, 1, 3);
-        amgraph_add_edge(graph, 1, 4);
-        amgraph_add_edge(graph, 2, 1);
-        amgraph_add_edge(graph, 2, 3);
-        amgraph_add_edge(graph, 3, 1);
-        amgraph_add_edge(graph, 3, 2);
-        amgraph_add_edge(graph, 3, 4);
-        amgraph_add_edge(graph, 3, 5);
-        amgraph_add_edge(graph, 4, 1);
-        amgraph_add_edge(graph, 4, 3);
-        amgraph_add_edge(graph, 4, 5);
-        amgraph_add_edge(graph, 5, 3);
-        amgraph_add_edge(graph, 5, 4);
+        amgraph_add_edge(graph, 1, 2, 1);
+        amgraph_add_edge(graph, 1, 3, 1);
+        amgraph_add_edge(graph, 1, 4, 1);
+        amgraph_add_edge(graph, 2, 1, 1);
+        amgraph_add_edge(graph, 2, 3, 1);
+        amgraph_add_edge(graph, 3, 1, 1);
+        amgraph_add_edge(graph, 3, 2, 1);
+        amgraph_add_edge(graph, 3, 4, 1);
+        amgraph_add_edge(graph, 3, 5, 1);
+        amgraph_add_edge(graph, 4, 1, 1);
+        amgraph_add_edge(graph, 4, 3, 1);
+        amgraph_add_edge(graph, 4, 5, 1);
+        amgraph_add_edge(graph, 5, 3, 1);
+        amgraph_add_edge(graph, 5, 4, 1);
         
         char* expected = "                         1 1\n\
      0 1 2 3 4 5 6 7 8 9 0 1\n\
