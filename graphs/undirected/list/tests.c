@@ -4,25 +4,26 @@
 
 int main() {
 
-    // { // should create AdjacencyListGraph correctly
-    //     struct AdjacencyListGraph* graph = create_adjacency_list_graph();
-    //     assert(graph != NULL);
-    //     assert(graph->list != NULL);
-    // }
+    { // should create AdjacencyListGraph correctly
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph();
+        assert(graph != NULL);
+        assert(graph->list != NULL);
+        for (int i = 0; i < MAX_GRAPH_SIZE; i++) 
+            assert(graph->list[i] == NULL);
+    }
 
-    // { // should add edge between two points (root)
-    //     struct AdjacencyListGraph* graph = create_adjacency_list_graph();
-    //     alg_add_edge(graph, 0, 2);
+    { // should add edge between two points (root)
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph();
+        alg_add_edge(graph, 0, 2);
 
-    //     assert(alg_get_vertex_edges(graph, 0)->vertex == 2);
-    //     assert(alg_get_vertex_edges(graph, 2)->vertex == 0);
-    // }
+        assert(alg_get_vertex_edges(graph, 0)->vertex == 2);
+        assert(alg_get_vertex_edges(graph, 2)->vertex == 0);
+    }
 
     { // should add edge between two points (more than one at same vertex)
         struct AdjacencyListGraph* graph = create_adjacency_list_graph();
         alg_add_edge(graph, 0, 2);
         alg_add_edge(graph, 1, 2);
-        printf("OLLLLA\n");
         alg_add_edge(graph, 3, 0);
 
         assert(alg_get_vertex_edges(graph, 0)->vertex == 2);

@@ -15,11 +15,8 @@ struct ALGNode* create_alg_node(int vertex) {
     return node; 
 }
 
-struct ALGNode* get_last_node(struct ALGNode* root) {
+struct ALGNode* alg_get_last_node(struct ALGNode* root) {
     struct ALGNode* node = root;
-    printf("NODEE: %p, %p\n", node, node->next);
-
-    // printf("NODEE: %p, %d\n", node, node->vertex);
     while (node->next != NULL) node = node->next;
     return node;
 }
