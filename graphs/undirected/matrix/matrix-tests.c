@@ -18,6 +18,9 @@ int main() {
 
         assert(__matrix_get(graph, 1, 2) == 1);
         assert(__matrix_get(graph, 1, 3) == 1);
+
+        assert(__matrix_get(graph, 2, 1) == 1);
+        assert(__matrix_get(graph, 3, 1) == 1);
     }
 
     { // should add edge correctly with weight different of 1
