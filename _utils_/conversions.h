@@ -1,4 +1,5 @@
-#ifndef CONVERSIONS_H
+#ifndef __CONVERSIONS_H
+#define __CONVERSIONS_H
 
 #include <stdio.h>
 #include <stdlib.h>

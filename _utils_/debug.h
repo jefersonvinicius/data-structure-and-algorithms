@@ -8,3 +8,11 @@ void debug_int_array(int* array, int array_size ) {
         else printf("[%d] %d -> ", i, value);
     } 
 }
+
+#ifdef DEBUG
+#define debug_log(__fmt, ...) printf(__fmt, ##__VA_ARGS__);
+#endif
+
+#ifndef DEBUG
+#define debug_log(__fmt, ...) 
+#endif
