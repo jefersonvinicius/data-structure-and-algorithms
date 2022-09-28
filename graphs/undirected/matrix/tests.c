@@ -49,7 +49,6 @@ int main() {
         int expected1[] = {0,1,2,3,4,5,6};
         assert_array(result1, expected1, 7);
 
-
         int* result2 = amgraph_bfs(graph, 1);
         int expected2[] = {1,0,2,3,4,5,6};
         assert_array(result2, expected2, 7);
