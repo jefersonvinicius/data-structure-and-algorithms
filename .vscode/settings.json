@@ -33,6 +33,9 @@
         "unistd.h": "c",
         "assert.h": "c",
         "quick.h": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "conversions.h": "c",
+        "functional": "c",
+        "graph.h": "c"
     }
 }

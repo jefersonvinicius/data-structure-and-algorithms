@@ -1,6 +1,9 @@
 #include "limits.h"
 #include "node.h"
 #include "stdlib.h"
+#include <string.h>
+#include "../../../queue/linkedlist/queue.h"
+#include "../../../_utils_/debug.h"
 
 #define MAX_GRAPH_SIZE 1000
 
@@ -31,4 +34,48 @@ void alg_add_edge(struct AdjacencyListGraph* graph, int a, int b) {
 
 struct ALGNode* alg_get_vertex_edges(struct AdjacencyListGraph* graph, int vertex) {
     return graph->list[vertex];
+}
+
+void print_connected_vertex(struct AdjacencyListGraph* graph, int vertex) {
+    struct ALGNode* node = graph->list[vertex];
+    printf("[%d]", vertex);
+    while (node != NULL) {
+        printf(" -> %d", node->vertex);
+        node = node->next;
+    }
+    printf("\n");
+}
+
+int* alg_bfs(struct AdjacencyListGraph* graph, int from) {
+    int* result = malloc(sizeof(int) * MAX_GRAPH_SIZE);
+    int result_index = 0;
+    int vertexes_visited[MAX_GRAPH_SIZE], vertexes_already_pending[MAX_GRAPH_SIZE];
+    memset(vertexes_visited, 0, MAX_GRAPH_SIZE); memset(vertexes_already_pending, 0, MAX_GRAPH_SIZE);
+    struct LklQueue* pending = create_lkl_queue();    
+
+    lklq_enqueue(pending, from);
+    while (!lklq_is_empty(pending)) {
+        int current = pending->front->data;
+        debug_log("Visiting: %d\n", current);
+
+        lklq_dequeue(pending);
+        vertexes_visited[current] = 1;
+
+        struct ALGNode* node = graph->list[current];
+        while (node != NULL) {
+            if (vertexes_visited[node->vertex] != 1 && vertexes_already_pending[node->vertex] != 1) {
+                debug_log("Adding %d to pending list\n", node->vertex);
+                lklq_enqueue(pending, node->vertex);
+                vertexes_already_pending[node->vertex] = 1;
+            }
+            node = node->next;
+        }
+        
+
+        result[result_index] = current;
+        result_index++;
+    }
+    
+    free(pending);
+    return result;
 }

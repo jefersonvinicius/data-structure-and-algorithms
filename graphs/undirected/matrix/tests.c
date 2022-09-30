@@ -33,7 +33,7 @@ int main() {
         assert(__matrix_get(graph, 1, 3) == 8);
     }
 
-    { // should make bfs result (starting from 1)
+    { // should make bfs result 
         struct AdjacencyMatrixGraph* graph = create_adj_matrix_graph(7);
         amgraph_add_edge(graph, 0, 1, 1);
         amgraph_add_edge(graph, 0, 2, 1);

@@ -1,5 +1,5 @@
 #include "stdlib.h"
-#include "string.h"
+#include "<string.h>"
 #include "../../../_utils_/conversions.h"
 #include "../../../_utils_/debug.h"
 #include "../../../queue/linkedlist/queue.h"
@@ -43,6 +43,7 @@ int* amgraph_bfs(struct AdjacencyMatrixGraph* graph, int from) {
     int* result = malloc(sizeof(int) * graph->size);
     int result_index = 0;
     int vertexes_visited[graph->size+1], vertexes_already_pending[graph->size+1];
+    memset(vertexes_visited, 0, graph->size+1); memset(vertexes_already_pending, 0, graph->size+1);
     struct LklQueue* pending = create_lkl_queue();    
 
     lklq_enqueue(pending, from);
