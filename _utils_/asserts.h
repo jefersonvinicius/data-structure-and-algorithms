@@ -40,7 +40,7 @@ void __assert_array(int* actual_array, int* expected_array, size_t expected_size
     for (int i = 0; i < expected_size; i++) {
         if (actual_array[i] != expected_array[i]) {
             printf("Assert array fail in %s/%s:%d\n", cwd, file, line);
-            printf("    At index [%d] expected (%d), but got [%d]\n", i, expected_array[i], actual_array[i]);
+            printf("    At index [%d] expected (%d), but got (%d)\n", i, expected_array[i], actual_array[i]);
             __print_array(actual_array, expected_size, i);
             __print_array(expected_array, expected_size, i);
             __print_error_indicator(actual_array, expected_array, expected_size, i);
