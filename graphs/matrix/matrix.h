@@ -1,8 +1,8 @@
 #include "stdlib.h"
-#include "<string.h>"
-#include "../../../_utils_/conversions.h"
-#include "../../../_utils_/debug.h"
-#include "../../../queue/linkedlist/queue.h"
+#include "string.h"
+#include "../../_utils_/conversions.h"
+#include "../../_utils_/debug.h"
+#include "../../queue/linkedlist/queue.h"
 
 #define MAX_GRAPH_MATRIX_SIZE 100
 

@@ -2,8 +2,8 @@
 #include "node.h"
 #include "stdlib.h"
 #include <string.h>
-#include "../../../queue/linkedlist/queue.h"
-#include "../../../_utils_/debug.h"
+#include "../../queue/linkedlist/queue.h"
+#include "../../_utils_/debug.h"
 
 #define MAX_GRAPH_SIZE 1000
 
@@ -13,7 +13,7 @@ struct AdjacencyListGraph {
 
 struct AdjacencyListGraph* create_adjacency_list_graph() {
     struct AdjacencyListGraph* graph = (struct AdjacencyListGraph*) malloc(sizeof(struct AdjacencyListGraph*));
-    graph->list = malloc(sizeof(struct ALGNode*) * MAX_GRAPH_SIZE);
+    graph->list = (struct ALGNode**) malloc(sizeof(struct ALGNode*) * MAX_GRAPH_SIZE);
     for (int i = 0; i < MAX_GRAPH_SIZE; i++) graph->list[i] = NULL;
     return graph;
 }
@@ -47,7 +47,7 @@ void print_connected_vertex(struct AdjacencyListGraph* graph, int vertex) {
 }
 
 int* alg_bfs(struct AdjacencyListGraph* graph, int from) {
-    int* result = malloc(sizeof(int) * MAX_GRAPH_SIZE);
+    int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
     int vertexes_visited[MAX_GRAPH_SIZE], vertexes_already_pending[MAX_GRAPH_SIZE];
     memset(vertexes_visited, 0, MAX_GRAPH_SIZE); memset(vertexes_already_pending, 0, MAX_GRAPH_SIZE);
@@ -77,5 +77,14 @@ int* alg_bfs(struct AdjacencyListGraph* graph, int from) {
     }
     
     free(pending);
+    return result;
+}
+
+
+int* alg_dfs(struct AdjacencyListGraph* graph, int from) {
+    int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
+    int result_index = 0;
+    int vertexes_visited[MAX_GRAPH_SIZE], vertexes_already_pending[MAX_GRAPH_SIZE];
+    memset(vertexes_visited, 0, MAX_GRAPH_SIZE); memset(vertexes_already_pending, 0, MAX_GRAPH_SIZE);
     return result;
 }
