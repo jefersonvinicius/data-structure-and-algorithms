@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include <string.h>
 #include "../../queue/linkedlist/queue.h"
+#include "../../stack/linkedlist/stack.h"
 #include "../../_utils_/debug.h"
 
 #define MAX_GRAPH_SIZE 1000
@@ -84,7 +85,51 @@ int* alg_bfs(struct AdjacencyListGraph* graph, int from) {
 int* alg_dfs(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
-    int vertexes_visited[MAX_GRAPH_SIZE], vertexes_already_pending[MAX_GRAPH_SIZE];
-    memset(vertexes_visited, 0, MAX_GRAPH_SIZE); memset(vertexes_already_pending, 0, MAX_GRAPH_SIZE);
+    int vertexes_visited[MAX_GRAPH_SIZE];
+    memset(vertexes_visited, 0, MAX_GRAPH_SIZE);
+    struct LklStack* stack = create_lklstack();
+    lkls_push(stack, from);
+    while (!lkls_is_empty(stack)) {
+        int current = lkls_top(stack);
+        if (vertexes_visited[current]) {
+            lkls_pop(stack);
+        } else {
+            debug_log("Visiting %d\n", current);
+            result[result_index++] = current;
+            vertexes_visited[current] = 1;
+        }
+        struct ALGNode* node = graph->list[current];
+        while (node != NULL) {
+            if (!vertexes_visited[node->vertex]) {
+                lkls_push(stack, current);
+                lkls_push(stack, node->vertex);
+                break;
+            } else {
+                node = node->next;
+            }
+        }
+    }
+
+    return result;
+}
+
+void __dfs(struct AdjacencyListGraph* graph, int vertex, int** visited, int** result, int* result_index) {
+    if (!visited[vertex]) {
+        *visited[vertex] = 1;
+        *result[(*result_index)++] = vertex;
+        struct ALGNode* node = graph->list[vertex];
+        while (node != NULL) {
+            __dfs(graph, node->vertex, visited, result, result_index);
+            node = node->next;
+        }
+    }
+}
+
+int* alg_dfs_recursive(struct AdjacencyListGraph* graph, int from) {
+    int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
+    int result_index = 0;
+    int vertexes_visited[MAX_GRAPH_SIZE];
+    memset(vertexes_visited, 0, MAX_GRAPH_SIZE);
+    __dfs(graph, from, &vertexes_visited, &result, &result_index);
     return result;
 }
