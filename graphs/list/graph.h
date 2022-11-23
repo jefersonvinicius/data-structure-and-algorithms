@@ -113,10 +113,10 @@ int* alg_dfs(struct AdjacencyListGraph* graph, int from) {
     return result;
 }
 
-void __dfs(struct AdjacencyListGraph* graph, int vertex, int** visited, int** result, int* result_index) {
+void __dfs(struct AdjacencyListGraph* graph, int vertex, int* visited, int* result, int* result_index) {
     if (!visited[vertex]) {
-        *visited[vertex] = 1;
-        *result[(*result_index)++] = vertex;
+        visited[vertex] = 1;
+        result[(*result_index)++] = vertex;
         struct ALGNode* node = graph->list[vertex];
         while (node != NULL) {
             __dfs(graph, node->vertex, visited, result, result_index);
@@ -127,9 +127,10 @@ void __dfs(struct AdjacencyListGraph* graph, int vertex, int** visited, int** re
 
 int* alg_dfs_recursive(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
+    int* vertexes_visited = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
-    int vertexes_visited[MAX_GRAPH_SIZE];
     memset(vertexes_visited, 0, MAX_GRAPH_SIZE);
-    __dfs(graph, from, &vertexes_visited, &result, &result_index);
+    __dfs(graph, from, vertexes_visited, result, &result_index);
+    free(vertexes_visited);
     return result;
 }
