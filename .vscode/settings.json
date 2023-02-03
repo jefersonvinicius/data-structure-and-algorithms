@@ -36,6 +36,8 @@
         "sstream": "c",
         "conversions.h": "c",
         "functional": "c",
-        "graph.h": "c"
+        "graph.h": "c",
+        "queue.h": "c",
+        "stack.h": "c"
     }
 }
