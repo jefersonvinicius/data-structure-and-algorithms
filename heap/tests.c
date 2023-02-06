@@ -30,13 +30,15 @@ int main() {
         assert(heap_top(heap) == 100);
     }
 
-    { // popping
+    { // deleting
         struct Heap* heap = create_heap(10);
         int values[7] = {5, 15, 10, 30, 35, 40, 25};
         for (int i = 0; i < 7; i++) heap_insert(heap, values[i]);
-        assert(heap_top(heap) == 40);
-        heap_delete(heap);
-        assert(heap_top(heap) == 35);
+        assert(heap_delete(heap) == 40);
+        int expected[7] = {0, 35, 30, 25, 15, 10, 5};
+        assert_array(heap->elements, expected, 7);
+        assert(heap_delete(heap) == 35);
+        assert(heap_delete(heap) == 30);
     }
 
     return 0;
