@@ -2,6 +2,7 @@
 #include "assert.h"
 #include "heap.h"
 #include "../_utils_/asserts.h"
+#include "../_utils_/data.h"
 
 void max_heap_tests() {
     { // creating
@@ -68,11 +69,9 @@ void min_heap_tests() {
         assert(heap->elements[1] == 5);
         assert(heap->current_index == 2);
         heap_insert(heap, 7);
-        int expected[3] = {0, 5, 7};
-        assert_array(heap->elements, expected, 3);
+        assert_array(heap->elements, make_array(0, 5, 7), 3);
         heap_insert(heap, 40);
-        int expected2[4] = {0, 5, 7, 40};
-        assert_array(heap->elements, expected2, 4);
+        assert_array(heap->elements, make_array(0, 5, 7, 40), 4);
     }
 
     { // top
