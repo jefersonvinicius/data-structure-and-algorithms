@@ -28,7 +28,7 @@ int _get_next_child_index(struct Heap* heap, int index) {
     if (
         is_valid_right_child_index && 
         heap->cmp(heap->elements[right_child_index], current)  && 
-        (!is_valid_left_child_index || (is_valid_left_child_index && heap->elements[right_child_index] >= heap->elements[left_child_index]))
+        (!is_valid_left_child_index || (is_valid_left_child_index && heap->cmp(heap->elements[right_child_index], heap->elements[left_child_index])))
     ) 
         return right_child_index;
     if (is_valid_left_child_index && heap->cmp(heap->elements[left_child_index], current)) return left_child_index;
@@ -42,9 +42,8 @@ void _swap_elements(int* elements, int index_a, int index_b) {
 }
 
 
-int max_cmp(int a, int b) {
-    return a > b;
-}
+int _max_cmp(int a, int b) { return a > b; }
+int _min_cmp(int a, int b) { return a < b; }
 
 struct Heap* create_heap(int size, int (*cmp)(int, int)) {
     struct Heap* heap = (struct Heap*) malloc(sizeof(struct Heap*));
@@ -54,6 +53,14 @@ struct Heap* create_heap(int size, int (*cmp)(int, int)) {
     heap->elements[0] = 0;
     heap->cmp = cmp;
     return heap;
+}
+
+struct Heap* create_max_heap(int size) {
+    return create_heap(size, _max_cmp);
+}
+
+struct Heap* create_min_heap(int size) {
+    return create_heap(size, _min_cmp);
 }
 
 void heap_insert(struct Heap* heap, int value) {
