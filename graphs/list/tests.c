@@ -108,5 +108,18 @@ int main() {
         assert_array(result2, expected2, 7);
     }
 
+    { // min spanning tree
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        algraph_add_edge(graph, 1, 2, 25);
+        algraph_add_edge(graph, 2, 3, 9);
+        algraph_add_edge(graph, 3, 4, 10);
+        algraph_add_edge(graph, 4, 5, 12);
+        algraph_add_edge(graph, 5, 6, 18);
+        algraph_add_edge(graph, 6, 5, 18);
+        algraph_add_edge(graph, 5, 7, 16);
+        algraph_add_edge(graph, 4, 7, 11);
+        algraph_add_edge(graph, 2, 7, 6);
+    }
+
     return 0;
 }
