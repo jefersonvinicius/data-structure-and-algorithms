@@ -19,7 +19,8 @@ int* generate_big_array() {
 
 #define NUMARGS(...)  (sizeof((int[]){__VA_ARGS__})/sizeof(int))
 
-#define make_array(...) _make_array(NUMARGS(__VA_ARGS__), __VA_ARGS__)
+// Create array from static values
+#define mksa(...) _make_array(NUMARGS(__VA_ARGS__), __VA_ARGS__)
 
 int* _make_array(int number_of_elements, ...) {
     int* result = malloc(sizeof(int) * number_of_elements);

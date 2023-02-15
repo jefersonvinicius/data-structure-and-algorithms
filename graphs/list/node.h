@@ -5,12 +5,13 @@
 
 struct ALGNode {
     struct ALGNode* next;
-    int vertex;
+    int vertex, weight;
 };
 
-struct ALGNode* create_alg_node(int vertex) {
+struct ALGNode* create_alg_node(int vertex, int weight) {
     struct ALGNode* node = (struct ALGNode*) malloc(sizeof(struct ALGNode*));
     node->vertex = vertex;
+    node->weight = weight;
     node->next = NULL;
     return node; 
 }

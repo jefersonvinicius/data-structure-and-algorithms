@@ -10,27 +10,31 @@
 
 struct AdjacencyListGraph {
     struct ALGNode** list;
+    int is_bidirectional;
 };
 
-struct AdjacencyListGraph* create_adjacency_list_graph() {
+struct AdjacencyListGraph* create_adjacency_list_graph(int is_bidirectional) {
     struct AdjacencyListGraph* graph = (struct AdjacencyListGraph*) malloc(sizeof(struct AdjacencyListGraph*));
+    graph->is_bidirectional = is_bidirectional;
     graph->list = (struct ALGNode**) malloc(sizeof(struct ALGNode*) * MAX_GRAPH_SIZE);
     for (int i = 0; i < MAX_GRAPH_SIZE; i++) graph->list[i] = NULL;
     return graph;
 }
 
-void __alg_add_edge(struct AdjacencyListGraph* graph, int a, int b) {
+void __alg_add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
     if (graph->list[a] == NULL) {
-        graph->list[a] = create_alg_node(b);
+        graph->list[a] = create_alg_node(b, weight);
     } else {
         struct ALGNode* last = alg_get_last_node(graph->list[a]);
-        last->next = create_alg_node(b);
+        last->next = create_alg_node(b, weight);
     }
 }
 
-void alg_add_edge(struct AdjacencyListGraph* graph, int a, int b) {
-    __alg_add_edge(graph, a, b);
-    __alg_add_edge(graph, b, a);
+void algraph_add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
+    __alg_add_edge(graph, a, b, weight);
+    if (graph->is_bidirectional) {
+        __alg_add_edge(graph, b, a, weight);
+    }
 }
 
 struct ALGNode* alg_get_vertex_edges(struct AdjacencyListGraph* graph, int vertex) {
@@ -47,7 +51,7 @@ void print_connected_vertex(struct AdjacencyListGraph* graph, int vertex) {
     printf("\n");
 }
 
-int* alg_bfs(struct AdjacencyListGraph* graph, int from) {
+int* algraph_bfs(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
     int vertexes_visited[MAX_GRAPH_SIZE], vertexes_already_pending[MAX_GRAPH_SIZE];
@@ -82,7 +86,7 @@ int* alg_bfs(struct AdjacencyListGraph* graph, int from) {
 }
 
 
-int* alg_dfs(struct AdjacencyListGraph* graph, int from) {
+int* algraph_dfs(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
     int vertexes_visited[MAX_GRAPH_SIZE];
@@ -125,7 +129,7 @@ void __dfs(struct AdjacencyListGraph* graph, int vertex, int* visited, int* resu
     }
 }
 
-int* alg_dfs_recursive(struct AdjacencyListGraph* graph, int from) {
+int* algraph_dfs_recursive(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int* vertexes_visited = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;

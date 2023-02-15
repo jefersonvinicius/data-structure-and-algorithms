@@ -6,13 +6,6 @@ struct Heap {
     int (*cmp)(int, int);
 };
 
-/*
-    node index: i
-    left child: 2 * i
-    right child: 2 * i + 1
-
-*/
-
 #define HEAP_ROOT_INDEX 1
 
 int _parent_index(int i) { return i / 2; }
