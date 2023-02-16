@@ -2,6 +2,8 @@
 #include "assert.h"
 #include "stdio.h"
 #include "_utils_/conversions.h"
+#include "_utils_/asserts.h"
+#include "_utils_/data.h"
 
 int main() {
 
@@ -25,7 +27,11 @@ int main() {
     }
 
     { // removing
-        
+        struct Array* array = create_array(sizeof(int*));
+        array_push(array, intp(1));
+        array_push(array, intp(2));
+        array_push(array, intp(3));
+        assert_array(array_to_c_array(array, int*), mksa(1,2,3), 3);
     }
 
     return 0;

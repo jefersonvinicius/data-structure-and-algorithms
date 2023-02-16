@@ -42,7 +42,18 @@ void* __array_at(struct Array* array, int index) {
     return array->items[index]->value;
 }
 
-int array_size(struct Array* array) {
-    return array->index;
+int array_size(struct Array* array) { return array->index; }
+
+#define array_to_c_array(array, type) ({ \
+    void** value = __array_to_c_array(array); \
+    (type) value; \ 
+})
+
+void* __array_to_c_array(struct Array* array) {
+    void** result = malloc(array_size(array) * array->array_item_size);
+    for (int i = 0; i < array_size(array); i++) {
+        result[i] = array->items[i];
+    }
+    return *result;
 }
 
