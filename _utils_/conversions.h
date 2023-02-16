@@ -19,4 +19,10 @@ char* to_string(int v) {
     return result;
 }
 
+int* intp(int v) { 
+    int* pointer = (int*) malloc(sizeof(int*));
+    *pointer = v;
+    return pointer;
+}
+
 #endif

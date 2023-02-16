@@ -1,4 +1,5 @@
 #include "stdlib.h"
+#include "stdio.h"
 
 struct ArrayItem {
     void* value;
@@ -12,7 +13,6 @@ struct Array {
 
 struct ArrayItem* _create_array_item(struct Array* array, void* value) {
     struct ArrayItem* item = (struct ArrayItem*) malloc(sizeof(struct ArrayItem*));
-    item->value = malloc(array->array_item_size);
     item->value = value;
     return item;
 }
@@ -38,6 +38,11 @@ void __array_push(struct Array* array, void* value) {
 })
 
 void* __array_at(struct Array* array, int index) {
+    if (index >= array->index) return NULL;
     return array->items[index]->value;
+}
+
+int array_size(struct Array* array) {
+    return array->index;
 }
 
