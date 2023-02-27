@@ -19,10 +19,17 @@ char* to_string(int v) {
     return result;
 }
 
+// create pointer to int value
 int* intp(int v) { 
     int* pointer = (int*) malloc(sizeof(int*));
     *pointer = v;
     return pointer;
+}
+
+int* unpointer_ints(int** values, int size) {
+    int* result = (int*) malloc(size * sizeof(int));
+    for (int i = 0; i < size; i++) result[i] = *values[i];
+    return result;
 }
 
 #endif

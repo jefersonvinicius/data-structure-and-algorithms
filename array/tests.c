@@ -31,7 +31,8 @@ int main() {
         array_push(array, intp(1));
         array_push(array, intp(2));
         array_push(array, intp(3));
-        assert_array(array_to_c_array(array, int*), mksa(1,2,3), 3);
+        int** result = array_to_c_array(array, int*);
+        assert_array(unpointer_ints(result, 3), mksa(1,2,3), 3);
     }
 
     return 0;

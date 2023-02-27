@@ -46,14 +46,14 @@ int array_size(struct Array* array) { return array->index; }
 
 #define array_to_c_array(array, type) ({ \
     void** value = __array_to_c_array(array); \
-    (type) value; \ 
+    (type*) value; \
 })
 
-void* __array_to_c_array(struct Array* array) {
+void** __array_to_c_array(struct Array* array) {
     void** result = malloc(array_size(array) * array->array_item_size);
     for (int i = 0; i < array_size(array); i++) {
-        result[i] = array->items[i];
+        result[i] = array->items[i]->value;
     }
-    return *result;
+    return result;
 }
 
