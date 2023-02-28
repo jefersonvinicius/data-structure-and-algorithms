@@ -57,3 +57,8 @@ void** __array_to_c_array(struct Array* array) {
     return result;
 }
 
+void array_remove_at(struct Array* array, int index) {
+    for (int i = index + 1; i < array_size(array); i++) 
+        array->items[i - 1] = array->items[i];
+    array->index--;
+}
