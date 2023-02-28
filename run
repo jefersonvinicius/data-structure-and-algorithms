@@ -1,0 +1,3 @@
+#!/bin/bash
+gcc -I$(pwd) -D TESTING -o $(pwd)/exec $1
+./exec
