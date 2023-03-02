@@ -2,9 +2,9 @@
 #include "node.h"
 #include "stdlib.h"
 #include <string.h>
-#include "../../queue/linkedlist/queue.h"
-#include "../../stack/linkedlist/stack.h"
-#include "../../_utils_/debug.h"
+#include "queue/linkedlist/queue.h"
+#include "stack/linkedlist/stack.h"
+#include "_utils_/debug.h"
 
 #define MAX_GRAPH_SIZE 1000
 

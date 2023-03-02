@@ -1,9 +1,12 @@
 #include "stdlib.h"
+#include "stdio.h"
+
 
 struct Heap {
-    int* elements;
+    void** elements;
     int max_size, current_index, size;
-    int (*cmp)(int, int);
+    size_t element_size;
+    int (*cmp)(void*, void*);
 };
 
 #define HEAP_ROOT_INDEX 1
@@ -13,7 +16,7 @@ int _left_child_index(int i) { return 2 * i; }
 int _right_child_index(int i) { return 2 * i + 1; }
 
 int _get_next_child_index(struct Heap* heap, int index) {
-    int current = heap->elements[index];
+    void* current = heap->elements[index];
     int right_child_index = _right_child_index(index);
     int left_child_index = _left_child_index(index);
     int is_valid_right_child_index = right_child_index <= heap->current_index;
@@ -28,35 +31,44 @@ int _get_next_child_index(struct Heap* heap, int index) {
     return -1;
 }
 
-void _swap_elements(int* elements, int index_a, int index_b) {
-    int tmp = elements[index_a];
+void _swap_elements(void** elements, int index_a, int index_b) {
+    void* tmp = elements[index_a];
     elements[index_a] = elements[index_b];
     elements[index_b] = tmp;
 }
 
 
-int _max_cmp(int a, int b) { return a > b; }
-int _min_cmp(int a, int b) { return a < b; }
+int _max_cmp(int* a, int* b) { return *a > *b; }
+int _min_cmp(int* a, int* b) { return *a < *b; }
 
-struct Heap* create_heap(int size, int (*cmp)(int, int)) {
+#define create_heap(size, element_size, cmp) __create_heap(size, element_size, (int(*)(void*, void*))cmp)
+
+struct Heap* __create_heap(int size, size_t element_size, int (*cmp)(void*, void*)) {
     struct Heap* heap = (struct Heap*) malloc(sizeof(struct Heap*));
     heap->max_size = size;
     heap->current_index = 1;
-    heap->elements = (int*) malloc(sizeof(int) * size + sizeof(int));
-    heap->elements[0] = 0;
+    heap->element_size = element_size;
+    printf("oi\n");
+    heap->elements = (void**) malloc((element_size * size) + element_size);
+    printf("oi2\n");
+    heap->elements[0] = NULL;
     heap->cmp = cmp;
+    printf("oi3\n");
     return heap;
 }
 
 struct Heap* create_max_heap(int size) {
-    return create_heap(size, _max_cmp);
+    return create_heap(size, sizeof(int*), _max_cmp);
 }
 
 struct Heap* create_min_heap(int size) {
-    return create_heap(size, _min_cmp);
+    return create_heap(size, sizeof(int*), _min_cmp);
 }
 
-void heap_insert(struct Heap* heap, int value) {
+#define heap_insert(heap, value) __heap_insert(heap, (void*) value)
+
+void __heap_insert(struct Heap* heap, void* value) {
+    printf("INSERTING: %d\n", *((int*)value));
     int index = heap->current_index;
     while (index > 1 &&  heap->cmp(value, heap->elements[_parent_index(index)])) {
         heap->elements[index] = heap->elements[_parent_index(index)];
@@ -67,7 +79,12 @@ void heap_insert(struct Heap* heap, int value) {
 }
 
 
-int heap_top(struct Heap* heap) {
+#define heap_top(heap, type) ({ \
+    void* top = __heap_top(heap); \
+    (type) top; \
+})
+
+void* __heap_top(struct Heap* heap) {
     if (heap->current_index <= 1) {
         fprintf(stderr, "Heap empty error!\n");
         exit(-1);
@@ -75,9 +92,14 @@ int heap_top(struct Heap* heap) {
     return heap->elements[HEAP_ROOT_INDEX];
 }
 
-int heap_delete(struct Heap* heap) {
-    int deleted_value = heap_top(heap);
-    int last = heap->elements[--heap->current_index];
+#define heap_delete(heap, type) ({ \
+    void* deleted = __heap_delete(heap); \
+    (type) deleted; \
+})
+
+void* __heap_delete(struct Heap* heap) {
+    void* deleted_value = heap_top(heap, void*);
+    void* last = heap->elements[--heap->current_index];
     heap->elements[HEAP_ROOT_INDEX] = last;
     int index = HEAP_ROOT_INDEX;
     while (1) {
