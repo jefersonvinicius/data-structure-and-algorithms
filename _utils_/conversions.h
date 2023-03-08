@@ -21,8 +21,8 @@ char* to_string(int v) {
 
 // create pointer to int value
 int* intp(int v) { 
-    int* pointer = (int*) malloc(sizeof(int*));
-    *pointer = v;
+    int* pointer = (int*) malloc(sizeof(int));
+    (*pointer) = v;
     return pointer;
 }
 

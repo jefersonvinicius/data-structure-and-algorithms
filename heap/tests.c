@@ -15,12 +15,14 @@ void max_heap_tests() {
     { // inserting
         struct Heap* heap = create_max_heap(10);
         heap_insert(heap, intp(5));
-        assert(*((int*) heap->elements[1]) == 5);
+        printf("VALUE: %d\n", *((int*) heap->elements[1]->value));
+        assert(*((int*) heap->elements[1]->value) == 5);
         assert(heap->current_index == 2);
-        heap_insert(heap, 7);
-        assert_array((int*) heap->elements, mksa(0, 7, 5), 3);
-        heap_insert(heap, 40);
-        assert_array((int*) heap->elements, mksa(0, 40, 5, 7), 4);
+        heap_insert(heap, intp(7));
+        printf("ajdsk\n");
+        assert_array((int*) elements_values(heap), mksa(7, 5), 2);
+        heap_insert(heap, intp(40));
+        assert_array((int*) elements_values(heap), mksa(40, 5, 7), 4);
     }
 
     { // top

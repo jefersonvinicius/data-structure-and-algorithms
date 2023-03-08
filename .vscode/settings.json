@@ -41,6 +41,7 @@
         "stack.h": "c",
         "utility": "cpp",
         "array.h": "c",
-        "system_error": "c"
+        "system_error": "c",
+        "initializer_list": "c"
     }
 }

@@ -29,7 +29,7 @@ for (const cFile of sortedFiles) {
   const shortFilename = cFile.replace(process.cwd(), '');
   console.log(`*** Compiling ${shortFilename}`);
   try {
-    execSync(`./run.sh ${cFile}`, { stdio: 'inherit' });
+    execSync(`./run ${cFile}`, { stdio: 'inherit' });
   } catch (error) {
     console.log(error.message);
     break;
