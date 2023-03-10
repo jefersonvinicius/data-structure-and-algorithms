@@ -69,12 +69,12 @@ struct Heap* __create_heap(int size, size_t element_size, int (*cmp)(void*, void
 
 #define create_heap(size, element_size, cmp) __create_heap(size, element_size, (int(*)(void*, void*))cmp)
 
-void** elements_values(struct Heap* heap) {
+void* elements_values(struct Heap* heap) {
     printf("CURREN INDEX: %d\n", heap->current_index);
-    void** result = malloc(heap->element_size * heap->current_index);
+    void* result = malloc(heap->element_size * heap->current_index);
     for (int i = 1; i < heap->current_index; i++) {
-        printf("VALUE: %d\n", *((int*)heap->elements[i]->value))
-        result[i] = heap->elements[i]->value;
+        printf("VALUE: %d\n", *((int*)heap->elements[i]->value));
+        result[i] = *heap->elements[i]->value;
     }
     printf("HE\n");
     return result;
