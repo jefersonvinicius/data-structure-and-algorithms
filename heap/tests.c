@@ -4,6 +4,7 @@
 #include "_utils_/asserts.h"
 #include "_utils_/data.h"
 #include "_utils_/conversions.h"
+#include "_utils_/comparators.h"
 
 void max_heap_tests() {
     { // creating
@@ -15,14 +16,12 @@ void max_heap_tests() {
     { // inserting
         struct Heap* heap = create_max_heap(10);
         heap_insert(heap, intp(5));
-        printf("VALUE: %d\n", *((int*) heap->elements[1]->value));
         assert(*((int*) heap->elements[1]->value) == 5);
         assert(heap->current_index == 2);
         heap_insert(heap, intp(7));
-        printf("ajdsk\n");
-        assert_array((int*) elements_values(heap), mksa(7, 5), 2);
+        assert_array_cmp(elements_values(heap), mksa(7, 5), 2, intp_equals_int);
         heap_insert(heap, intp(40));
-        assert_array((int*) elements_values(heap), mksa(40, 5, 7), 4);
+        assert_array_cmp(elements_values(heap), mksa(40, 5, 7), 3, intp_equals_int);
     }
 
     { // top
