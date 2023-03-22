@@ -42,6 +42,7 @@
         "utility": "cpp",
         "array.h": "c",
         "system_error": "c",
-        "initializer_list": "c"
+        "initializer_list": "c",
+        "comparators.h": "c"
     }
 }

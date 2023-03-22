@@ -100,8 +100,39 @@ void min_heap_tests() {
     }
 }
 
+int id_counter = 1;
+struct Person {
+    int id, age;
+    char* name;
+};
+struct Person* create_person(const char* name, int age) {
+    struct Person* person = (struct Person*) malloc(sizeof(struct Person));
+    person->id = id_counter++;
+    person->age = age;
+    person->name = malloc(strlen(name) * sizeof(char));
+    strcpy(person->name, name);
+    return person;
+}
+
+int max_person(const void* a, const void* b) {
+    return ((struct Person*)a)->age > ((struct Person*)b)->age;
+}
+
+void using_with_struct() {
+    struct Heap* heap = create_heap(10, sizeof(struct Person), max_person);
+    heap_insert(heap, create_person("Pam", 29));
+    heap_insert(heap, create_person("Jeferson", 21));
+    heap_insert(heap, create_person("Jim", 30));
+    assert(((struct Person*) heap_top(heap))->age == 30);
+    heap_delete(heap);
+    assert(((struct Person*) heap_top(heap))->age == 29);
+    heap_delete(heap);
+    assert(((struct Person*) heap_top(heap))->age == 21);
+}
+
 int main() {
     max_heap_tests();
     min_heap_tests();
+    using_with_struct();
     return 0;
 }
