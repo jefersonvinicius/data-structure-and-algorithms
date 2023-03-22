@@ -1,3 +1,4 @@
 #!/bin/bash
+set -e # exit on any error happens
 gcc -I$(pwd) -D TESTING -o $(pwd)/exec $1
 valgrind --leak-check=yes ./exec

@@ -55,9 +55,7 @@ void __assert_array(int* actual_array, int* expected_array, size_t expected_size
 void __assert_array_cmp(void** actual_array, void** expected_array, size_t expected_size, int (*cmp)(const void*, const void*), char const * file, int line) {
     char cwd[100000];
     getcwd(cwd, sizeof(cwd));
-    printf("size: %ld, CWD %s/%s:%d\n", expected_size, cwd, file, line);
     for (int i = 0; i < expected_size; i++) {
-        printf("COMPING... %p - %p\n", actual_array[i], expected_array[i]);
         if (!(*cmp)(actual_array[i], expected_array[i])) {
             printf("Assert array fail in %s/%s:%d\n", cwd, file, line);
             printf("    At index [%d]\n", i);
