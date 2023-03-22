@@ -4,6 +4,7 @@
 #include <string.h>
 #include "queue/linkedlist/queue.h"
 #include "stack/linkedlist/stack.h"
+#include "heap/heap.h"
 #include "_utils_/debug.h"
 
 #define MAX_GRAPH_SIZE 1000
@@ -11,17 +12,18 @@
 struct AdjacencyListGraph {
     struct ALGNode** list;
     int is_bidirectional;
+    size_t size;
 };
 
 struct AdjacencyListGraph* create_adjacency_list_graph(int is_bidirectional) {
-    struct AdjacencyListGraph* graph = (struct AdjacencyListGraph*) malloc(sizeof(struct AdjacencyListGraph*));
+    struct AdjacencyListGraph* graph = (struct AdjacencyListGraph*) malloc(sizeof(struct AdjacencyListGraph));
     graph->is_bidirectional = is_bidirectional;
     graph->list = (struct ALGNode**) malloc(sizeof(struct ALGNode*) * MAX_GRAPH_SIZE);
     for (int i = 0; i < MAX_GRAPH_SIZE; i++) graph->list[i] = NULL;
     return graph;
 }
 
-void __alg_add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
+void __add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
     if (graph->list[a] == NULL) {
         graph->list[a] = create_alg_node(b, weight);
     } else {
@@ -30,18 +32,18 @@ void __alg_add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) 
     }
 }
 
-void algraph_add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
-    __alg_add_edge(graph, a, b, weight);
+void graph_add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
+    __add_edge(graph, a, b, weight);
     if (graph->is_bidirectional) {
-        __alg_add_edge(graph, b, a, weight);
+        __add_edge(graph, b, a, weight);
     }
 }
 
-struct ALGNode* alg_get_vertex_edges(struct AdjacencyListGraph* graph, int vertex) {
+struct ALGNode* graph_get_vertex_edges(struct AdjacencyListGraph* graph, int vertex) {
     return graph->list[vertex];
 }
 
-void print_connected_vertex(struct AdjacencyListGraph* graph, int vertex) {
+void graph_print_connected_vertex(struct AdjacencyListGraph* graph, int vertex) {
     struct ALGNode* node = graph->list[vertex];
     printf("[%d]", vertex);
     while (node != NULL) {
@@ -51,7 +53,7 @@ void print_connected_vertex(struct AdjacencyListGraph* graph, int vertex) {
     printf("\n");
 }
 
-int* algraph_bfs(struct AdjacencyListGraph* graph, int from) {
+int* graph_bfs(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
     int vertexes_visited[MAX_GRAPH_SIZE], vertexes_already_pending[MAX_GRAPH_SIZE];
@@ -86,7 +88,7 @@ int* algraph_bfs(struct AdjacencyListGraph* graph, int from) {
 }
 
 
-int* algraph_dfs(struct AdjacencyListGraph* graph, int from) {
+int* graph_dfs(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
     int vertexes_visited[MAX_GRAPH_SIZE];
@@ -129,12 +131,57 @@ void __dfs(struct AdjacencyListGraph* graph, int vertex, int* visited, int* resu
     }
 }
 
-int* algraph_dfs_recursive(struct AdjacencyListGraph* graph, int from) {
+int* graph_dfs_recursive(struct AdjacencyListGraph* graph, int from) {
     int* result = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int* vertexes_visited = (int*) malloc(sizeof(int) * MAX_GRAPH_SIZE);
     int result_index = 0;
     memset(vertexes_visited, 0, MAX_GRAPH_SIZE);
     __dfs(graph, from, vertexes_visited, result, &result_index);
     free(vertexes_visited);
+    return result;
+}
+
+struct SpanTreeResult {
+    struct ALGNode** selected;
+    int total;
+};
+
+int min_span(const void* a, const void* b) {
+    return ((struct ALGNode*)a)->weight < ((struct ALGNode*)b)->weight;
+}
+
+
+struct SpanTreeResult graph_span_tree(struct AdjacencyListGraph* graph) {
+    struct Heap* heap = create_heap(10000, sizeof(struct ALGNode), min_span);
+    int edges_already_added[1000][1000];
+    for (int i = 0; i < MAX_GRAPH_SIZE; i++) {
+        struct ALGNode* node = graph->list[i];
+        while (node != NULL) {
+            if (edges_already_added[i][node->vertex] == 1) {
+                node = node->next;
+                continue;
+            }
+            heap_insert(heap, node);
+            edges_already_added[i][node->vertex] = 1;
+            edges_already_added[node->vertex][i] = 1;
+        }
+    }
+
+    // while (heap_top(heap) != NULL) {
+    //     printf("WEIGHT: %d\n", ((struct ALGNode*) heap_top(heap))->weight);
+    //     heap_delete(heap);
+    // }
+    int total = 0;
+    while (heap_top(heap) != NULL) {
+        struct ALGNode* min = (struct ALGNode*) heap_top(heap);
+        printf("WEIGHT: %d\n", min->weight);
+        total += min->weight;
+        heap_delete(heap);
+    }
+
+    struct SpanTreeResult result = {
+        .total = total
+    };
+
     return result;
 }

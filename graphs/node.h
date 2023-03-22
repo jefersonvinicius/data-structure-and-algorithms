@@ -9,7 +9,7 @@ struct ALGNode {
 };
 
 struct ALGNode* create_alg_node(int vertex, int weight) {
-    struct ALGNode* node = (struct ALGNode*) malloc(sizeof(struct ALGNode*));
+    struct ALGNode* node = (struct ALGNode*) malloc(sizeof(struct ALGNode));
     node->vertex = vertex;
     node->weight = weight;
     node->next = NULL;

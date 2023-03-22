@@ -118,7 +118,7 @@ int max_person(const void* a, const void* b) {
     return ((struct Person*)a)->age > ((struct Person*)b)->age;
 }
 
-void using_with_struct() {
+void using_with_struct_tests() {
     struct Heap* heap = create_heap(10, sizeof(struct Person), max_person);
     heap_insert(heap, create_person("Pam", 29));
     heap_insert(heap, create_person("Jeferson", 21));
@@ -133,6 +133,6 @@ void using_with_struct() {
 int main() {
     max_heap_tests();
     min_heap_tests();
-    using_with_struct();
+    using_with_struct_tests();
     return 0;
 }
