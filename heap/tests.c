@@ -26,8 +26,9 @@ void max_heap_tests() {
 
     { // top
         struct Heap* heap = create_max_heap(100);
+        assert(heap_top(heap) == NULL);
         for (int i = 100; i >= 1; i--) heap_insert(heap, intp(i));
-        assert(*((int*)heap_top(heap)) == 100);
+        assert(*((int*) heap_top(heap)) == 100);
     }
 
     { // deleting
