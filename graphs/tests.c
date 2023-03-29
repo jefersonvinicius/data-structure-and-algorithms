@@ -1,6 +1,7 @@
 #include "assert.h"
 #include "stdio.h"
 #include "graph.h"
+#include "_utils_/debug.h"
 #include "_utils_/asserts.h"
 
 int main() {

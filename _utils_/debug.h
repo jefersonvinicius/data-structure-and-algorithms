@@ -1,4 +1,9 @@
+#ifndef __DEBUG_H
+#define __DEBUG_H
+
 #include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 void debug_int_array(int* array, int array_size ) {
     printf("DEBUGGING ARRAY ALLOCATED AT: %p\n", &(*array));
@@ -9,10 +14,18 @@ void debug_int_array(int* array, int array_size ) {
     } 
 }
 
+void wait_key() {
+    pid_t pid = getpid();
+    printf("Waiting Enter for %u process\n", pid);
+    char c; scanf("%c", &c);
+}
+
 #ifdef DEBUG
 #define debug_log(__fmt, ...) printf(__fmt, ##__VA_ARGS__);
 #endif
 
 #ifndef DEBUG
 #define debug_log(__fmt, ...) 
+#endif
+
 #endif
