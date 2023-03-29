@@ -16,11 +16,17 @@ int main() {
     { // should add edge between two points (bidirectional)
         struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
         graph_add_edge(graph, 0, 2, 10);
-
         assert(graph_get_vertex_edges(graph, 0)->vertex == 2);
-        assert(graph_get_vertex_edges(graph, 0)->weight == 10);
+        assert(graph_get_vertex_edges(graph, 0)->vertex == 2);
+        assert(graph_get_vertex_edges(graph, 0)->parent_vertex == 0);
+        assert(graph_get_vertex_edges(graph, 0)->next == NULL);
         assert(graph_get_vertex_edges(graph, 2)->vertex == 0);
         assert(graph_get_vertex_edges(graph, 2)->weight == 10);
+        assert(graph_get_vertex_edges(graph, 2)->parent_vertex == 2);
+        assert(graph_get_vertex_edges(graph, 2)->next == NULL);
+        graph_add_edge(graph, 0, 3, 10);
+        assert(graph_get_vertex_edges(graph, 3)->parent_vertex == 3);
+        assert(graph_get_vertex_edges(graph, 0)->next->parent_vertex == 0);
     }
 
     { // should add edge between two points (no bidirectional)
@@ -120,8 +126,25 @@ int main() {
         graph_add_edge(graph, 4, 7, 11);
         graph_add_edge(graph, 2, 7, 6);
         struct SpanTreeResult result = graph_span_tree(graph);
-        printf("TOTAL: %d\n", result.total);
-        // assert(result.total == 60);
+        assert(result.total == 60);
+    }
+
+    { // min spanning tree (without cycle)
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        graph_add_edge(graph, 1, 2, 25);
+        graph_add_edge(graph, 2, 3, 20);
+        graph_add_edge(graph, 3, 4, 17);
+        struct SpanTreeResult result = graph_span_tree(graph);
+        assert(result.total == 62);
+    }
+
+    { // min spanning tree (small graph with cycle)
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        graph_add_edge(graph, 1, 2, 2);
+        graph_add_edge(graph, 2, 3, 3);
+        graph_add_edge(graph, 3, 1, 6);
+        struct SpanTreeResult result = graph_span_tree(graph);
+        assert(result.total == 5);
     }
 
     return 0;

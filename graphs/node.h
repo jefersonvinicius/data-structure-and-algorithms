@@ -5,7 +5,7 @@
 
 struct ALGNode {
     struct ALGNode* next;
-    int vertex, weight;
+    int vertex, weight, parent_vertex;
 };
 
 struct ALGNode* create_alg_node(int vertex, int weight) {
@@ -13,6 +13,7 @@ struct ALGNode* create_alg_node(int vertex, int weight) {
     node->vertex = vertex;
     node->weight = weight;
     node->next = NULL;
+    node->parent_vertex = -1;
     return node; 
 }
 

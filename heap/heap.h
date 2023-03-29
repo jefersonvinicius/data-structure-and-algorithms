@@ -93,9 +93,7 @@ void __heap_insert(struct Heap* heap, void* value) {
 }
 
 void* heap_top(struct Heap* heap) {
-    if (heap->current_index <= 1) {
-        return NULL;
-    };
+    if (heap->current_index <= 1) return NULL;
     return heap->elements[HEAP_ROOT_INDEX]->value;
 }
 

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "queue/linkedlist/queue.h"
 #include "stack/linkedlist/stack.h"
+#include "sets/disjoint/disjoint.h"
 #include "heap/heap.h"
 #include "_utils_/debug.h"
 
@@ -26,9 +27,11 @@ struct AdjacencyListGraph* create_adjacency_list_graph(int is_bidirectional) {
 void __add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
     if (graph->list[a] == NULL) {
         graph->list[a] = create_alg_node(b, weight);
+        graph->list[a]->parent_vertex = a;
     } else {
         struct ALGNode* last = alg_get_last_node(graph->list[a]);
         last->next = create_alg_node(b, weight);
+        last->next->parent_vertex = a;
     }
 }
 
@@ -47,10 +50,18 @@ void graph_print_connected_vertex(struct AdjacencyListGraph* graph, int vertex) 
     struct ALGNode* node = graph->list[vertex];
     printf("[%d]", vertex);
     while (node != NULL) {
-        printf(" -> %d", node->vertex);
+        printf(" -> [%d](w: %d, p: %d)", node->vertex, node->weight, node->parent_vertex);
         node = node->next;
     }
     printf("\n");
+}
+
+void graph_print_all_connections(struct AdjacencyListGraph* graph) {
+    for (int i = 0; i < MAX_GRAPH_SIZE; i++) {
+        if (graph_get_vertex_edges(graph, i) != NULL) {
+            graph_print_connected_vertex(graph, i);
+        }
+    }
 }
 
 int* graph_bfs(struct AdjacencyListGraph* graph, int from) {
@@ -154,28 +165,29 @@ int min_span(const void* a, const void* b) {
 struct SpanTreeResult graph_span_tree(struct AdjacencyListGraph* graph) {
     struct Heap* heap = create_heap(10000, sizeof(struct ALGNode), min_span);
     int edges_already_added[1000][1000];
-    for (int i = 0; i < MAX_GRAPH_SIZE; i++) {
-        struct ALGNode* node = graph->list[i];
+    for (int c = 0; c < 1000; c++) for (int r = 0; r < 1000; r++) edges_already_added[r][c] = -1;
+    for (int vertex = 0; vertex < MAX_GRAPH_SIZE; vertex++) {
+        struct ALGNode* node = graph_get_vertex_edges(graph, vertex);
         while (node != NULL) {
-            if (edges_already_added[i][node->vertex] == 1) {
+            if (edges_already_added[node->parent_vertex][node->vertex] == 1) {
                 node = node->next;
                 continue;
             }
             heap_insert(heap, node);
-            edges_already_added[i][node->vertex] = 1;
-            edges_already_added[node->vertex][i] = 1;
+            edges_already_added[node->parent_vertex][node->vertex] = 1;
+            edges_already_added[node->vertex][node->parent_vertex] = 1;
         }
     }
-
-    // while (heap_top(heap) != NULL) {
-    //     printf("WEIGHT: %d\n", ((struct ALGNode*) heap_top(heap))->weight);
-    //     heap_delete(heap);
-    // }
     int total = 0;
+    struct IntDisjointSet* disjoint_sets = create_int_disjoint_set();
     while (heap_top(heap) != NULL) {
         struct ALGNode* min = (struct ALGNode*) heap_top(heap);
-        printf("WEIGHT: %d\n", min->weight);
-        total += min->weight;
+        // printf("VERTEX %d - %d, WEIGHT: %d\n", min->vertex, min->parent_vertex, min->weight);
+        if (!int_disjoint_set_has(disjoint_sets, min->parent_vertex, min->vertex)) {
+            // printf("SELECTED!\n");
+            total += min->weight;
+            int_disjoint_set_union(disjoint_sets, min->parent_vertex, min->vertex);
+        }
         heap_delete(heap);
     }
 
