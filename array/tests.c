@@ -18,9 +18,9 @@ int main() {
         array_push(array, intp(1));
         array_push(array, intp(2));
         assert(array->index == 2);
-        assert(*array_at(array, 0, int*) == 1);
-        assert(*array_at(array, 1, int*) == 2);
-        assert(array_at(array, 2, int*) == NULL);
+        assert(*((int*) array_at(array, 0)) == 1);
+        assert(*((int*) array_at(array, 1)) == 2);
+        assert(array_at(array, 2) == NULL);
         assert(array_size(array) == 2);
         array_push(array, intp(3));
         assert(array_size(array) == 3);

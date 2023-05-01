@@ -6,17 +6,23 @@
 #include "stack/linkedlist/stack.h"
 #include "sets/disjoint/disjoint.h"
 #include "heap/heap.h"
+#include "array/array.h"
 #include "_utils_/debug.h"
 
 #define MAX_GRAPH_SIZE 1000
 
+enum GraphBidirectionalFlag {
+    NotBidirectional = 0,
+    IsBidirectional = 1
+};
+
 struct AdjacencyListGraph {
     struct ALGNode** list;
-    int is_bidirectional;
+    enum GraphBidirectionalFlag is_bidirectional;
     size_t size;
 };
 
-struct AdjacencyListGraph* create_adjacency_list_graph(int is_bidirectional) {
+struct AdjacencyListGraph* create_adjacency_list_graph(enum GraphBidirectionalFlag is_bidirectional) {
     struct AdjacencyListGraph* graph = (struct AdjacencyListGraph*) malloc(sizeof(struct AdjacencyListGraph));
     graph->is_bidirectional = is_bidirectional;
     graph->list = (struct ALGNode**) malloc(sizeof(struct ALGNode*) * MAX_GRAPH_SIZE);
@@ -37,7 +43,7 @@ void __add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
 
 void graph_add_edge(struct AdjacencyListGraph* graph, int a, int b, int weight) {
     __add_edge(graph, a, b, weight);
-    if (graph->is_bidirectional) {
+    if (graph->is_bidirectional == IsBidirectional) {
         __add_edge(graph, b, a, weight);
     }
 }
@@ -152,8 +158,8 @@ int* graph_dfs_recursive(struct AdjacencyListGraph* graph, int from) {
     return result;
 }
 
-struct SpanTreeResult {
-    struct ALGNode** selected;
+struct KruskalResult {
+    struct Array* selected_nodes;
     int total;
 };
 
@@ -161,8 +167,7 @@ int min_span(const void* a, const void* b) {
     return ((struct ALGNode*)a)->weight < ((struct ALGNode*)b)->weight;
 }
 
-
-struct SpanTreeResult graph_span_tree(struct AdjacencyListGraph* graph) {
+struct KruskalResult graph_kruskal(struct AdjacencyListGraph* graph) {
     struct Heap* heap = create_heap(10000, sizeof(struct ALGNode), min_span);
     int edges_already_added[1000][1000];
     for (int c = 0; c < 1000; c++) for (int r = 0; r < 1000; r++) edges_already_added[r][c] = -1;
@@ -180,20 +185,23 @@ struct SpanTreeResult graph_span_tree(struct AdjacencyListGraph* graph) {
     }
     int total = 0;
     struct IntDisjointSet* disjoint_sets = create_int_disjoint_set();
+    struct Array* selected_nodes = create_array(sizeof(struct ALGNode));
     while (heap_top(heap) != NULL) {
         struct ALGNode* min = (struct ALGNode*) heap_top(heap);
-        // printf("VERTEX %d - %d, WEIGHT: %d\n", min->vertex, min->parent_vertex, min->weight);
         if (!int_disjoint_set_has(disjoint_sets, min->parent_vertex, min->vertex)) {
-            // printf("SELECTED!\n");
             total += min->weight;
+            array_push(selected_nodes, min);
             int_disjoint_set_union(disjoint_sets, min->parent_vertex, min->vertex);
         }
         heap_delete(heap);
     }
 
-    struct SpanTreeResult result = {
-        .total = total
+    struct KruskalResult result = {
+        .total = total,
+        .selected_nodes = selected_nodes
     };
 
     return result;
 }
+
+void graph_dijkstra(struct AdjacencyListGraph* graph, int initial_vertex) {}

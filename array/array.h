@@ -32,12 +32,7 @@ void __array_push(struct Array* array, void* value) {
     array->index++;
 }
 
-#define array_at(array, index, type) ({ \
-    void* value = __array_at(array, index); \
-    (type) value; \
-})
-
-void* __array_at(struct Array* array, int index) {
+void* array_at(struct Array* array, int index) {
     if (index >= array->index) return NULL;
     return array->items[index]->value;
 }

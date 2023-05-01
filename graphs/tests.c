@@ -7,7 +7,7 @@
 int main() {
 
     { // should create AdjacencyListGraph correctly
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         assert(graph != NULL);
         assert(graph->list != NULL);
         for (int i = 0; i < MAX_GRAPH_SIZE; i++) 
@@ -15,7 +15,7 @@ int main() {
     }
 
     { // should add edge between two points (bidirectional)
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 0, 2, 10);
         assert(graph_get_vertex_edges(graph, 0)->vertex == 2);
         assert(graph_get_vertex_edges(graph, 0)->vertex == 2);
@@ -31,7 +31,7 @@ int main() {
     }
 
     { // should add edge between two points (no bidirectional)
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(0);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(NotBidirectional);
         graph_add_edge(graph, 0, 2, 10);
 
         assert(graph_get_vertex_edges(graph, 0)->vertex == 2);
@@ -40,7 +40,7 @@ int main() {
     }
 
     { // should add edge between two points (more than one at same vertex)
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 0, 2, 10);
         graph_add_edge(graph, 1, 2, 11);
         graph_add_edge(graph, 3, 0, 12);
@@ -53,7 +53,7 @@ int main() {
     }
 
     { // should make bfs result 
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 0, 1, 10);
         graph_add_edge(graph, 0, 2, 11);
         graph_add_edge(graph, 0, 3, 12);
@@ -74,7 +74,7 @@ int main() {
     }
 
     { // should make dfs result 
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 0, 1, 10);
         graph_add_edge(graph, 0, 2, 11);
         graph_add_edge(graph, 0, 3, 12);
@@ -95,7 +95,7 @@ int main() {
     }
 
     { // should make dfs result recursive
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 0, 1, 10);
         graph_add_edge(graph, 0, 2, 11);
         graph_add_edge(graph, 0, 3, 12);
@@ -116,7 +116,7 @@ int main() {
     }
 
     { // min spanning tree
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 1, 2, 25);
         graph_add_edge(graph, 2, 3, 9);
         graph_add_edge(graph, 3, 4, 10);
@@ -126,26 +126,41 @@ int main() {
         graph_add_edge(graph, 5, 7, 16);
         graph_add_edge(graph, 4, 7, 11);
         graph_add_edge(graph, 2, 7, 6);
-        struct SpanTreeResult result = graph_span_tree(graph);
+        struct KruskalResult result = graph_kruskal(graph);
         assert(result.total == 60);
     }
 
     { // min spanning tree (without cycle)
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 1, 2, 25);
         graph_add_edge(graph, 2, 3, 20);
         graph_add_edge(graph, 3, 4, 17);
-        struct SpanTreeResult result = graph_span_tree(graph);
+        struct KruskalResult result = graph_kruskal(graph);
         assert(result.total == 62);
     }
 
     { // min spanning tree (small graph with cycle)
-        struct AdjacencyListGraph* graph = create_adjacency_list_graph(1);
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 1, 2, 2);
         graph_add_edge(graph, 2, 3, 3);
         graph_add_edge(graph, 3, 1, 6);
-        struct SpanTreeResult result = graph_span_tree(graph);
+        struct KruskalResult result = graph_kruskal(graph);
         assert(result.total == 5);
+        assert(array_size(result.selected_nodes) == 2);
+        assert(((struct ALGNode*) array_at(result.selected_nodes, 0))->weight == 2);
+        assert(((struct ALGNode*) array_at(result.selected_nodes, 1))->weight == 3);
+    }
+
+    { // dijkstra algorithm
+        struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
+        graph_add_edge(graph, 0, 1, 2);
+        graph_add_edge(graph, 0, 2, 4);
+        graph_add_edge(graph, 1, 3, 5);
+        graph_add_edge(graph, 2, 3, 1);
+        graph_add_edge(graph, 2, 4, 5);
+        graph_add_edge(graph, 3, 4, 2);
+        struct KruskalResult result = graph_kruskal(graph);
+        
     }
 
     return 0;
