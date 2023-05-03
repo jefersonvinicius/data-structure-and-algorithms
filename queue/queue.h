@@ -3,10 +3,8 @@
 
 #include <stdlib.h>
 
-// Queue Linked List Implementation
-
 struct LklQueueNode {
-    int data;
+    void* data;
     struct LklQueueNode *next; 
 };
 
@@ -14,7 +12,7 @@ struct LklQueue {
     struct LklQueueNode *front;
 };
 
-struct LklQueueNode* create_lkl_queue_node(int value) {
+struct LklQueueNode* create_lkl_queue_node(void* value) {
     struct LklQueueNode *node = (struct LklQueueNode*) malloc(sizeof(struct LklQueueNode));
     node->data = value;
     node->next = NULL;
@@ -22,7 +20,7 @@ struct LklQueueNode* create_lkl_queue_node(int value) {
 };
 
 struct LklQueue* create_lkl_queue() {
-    struct LklQueue *queue = (struct LklQueue*) malloc(sizeof(struct LklQueue*));
+    struct LklQueue *queue = (struct LklQueue*) malloc(sizeof(struct LklQueue));
     queue->front = NULL;
     return queue;
 };
@@ -33,11 +31,18 @@ struct LklQueueNode* __get_last_lkl_queue_node(struct LklQueue* queue) {
     return node;
 }
 
+void* lklq_front(struct LklQueue* queue) {
+    if (queue->front == NULL) return NULL;
+    return queue->front->data;
+}
+
 int lklq_is_empty(struct LklQueue* queue) {
     return queue->front == NULL;
 }
 
-void lklq_enqueue(struct LklQueue *queue, int value) {
+// #define lklq_enqueue(queue, value) __lklq_enqueue(queue, (*void) value)
+
+void lklq_enqueue(struct LklQueue *queue, void* value) {
     struct LklQueueNode* new_node = create_lkl_queue_node(value);
     if (lklq_is_empty(queue)) {
         queue->front = new_node;
@@ -51,7 +56,6 @@ void lklq_dequeue(struct LklQueue *queue) {
 
     struct LklQueueNode* tmp = queue->front;
     queue->front = queue->front->next;
-
     free(tmp);
 }
 

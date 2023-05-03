@@ -1,5 +1,6 @@
 #include "queue.h"
 #include "assert.h"
+#include "_utils_/conversions.h"
 
 int main() {
 
@@ -11,12 +12,12 @@ int main() {
     { // should enqueue correctly
         struct LklQueue *queue = create_lkl_queue();
         assert(queue->front == NULL);
-        lklq_enqueue(queue, 1);
-        assert(queue->front->data == 1);
-        lklq_enqueue(queue, 2);
-        assert(queue->front->data == 1);
+        lklq_enqueue(queue, intp(1));
+        assert(*((int*) lklq_front(queue)) == 1);
+        lklq_enqueue(queue, intp(2));
+        assert(*((int*) lklq_front(queue)) == 1);
         lklq_enqueue(queue, 3);
-        assert(queue->front->data == 1);
+        assert(*((int*) lklq_front(queue)) == 1);
         assert(queue->front->next->data == 2);
         assert(queue->front->next->next->data == 3);
         lklq_enqueue(queue, 4);

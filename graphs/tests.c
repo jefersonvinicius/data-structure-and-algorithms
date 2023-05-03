@@ -159,8 +159,8 @@ int main() {
         graph_add_edge(graph, 2, 3, 1);
         graph_add_edge(graph, 2, 4, 5);
         graph_add_edge(graph, 3, 4, 2);
-        struct KruskalResult result = graph_kruskal(graph);
-        
+        struct DijkstraResult result = graph_dijkstra(graph, 0);
+        assert(result.distances[0] == INFINITY);
     }
 
     return 0;

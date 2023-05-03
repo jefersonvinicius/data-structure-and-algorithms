@@ -1,8 +1,9 @@
 #include "limits.h"
 #include "node.h"
 #include "stdlib.h"
+#include "math.h"
 #include <string.h>
-#include "queue/linkedlist/queue.h"
+#include "queue/queue.h"
 #include "stack/linkedlist/stack.h"
 #include "sets/disjoint/disjoint.h"
 #include "heap/heap.h"
@@ -77,9 +78,9 @@ int* graph_bfs(struct AdjacencyListGraph* graph, int from) {
     memset(vertexes_visited, 0, MAX_GRAPH_SIZE); memset(vertexes_already_pending, 0, MAX_GRAPH_SIZE);
     struct LklQueue* pending = create_lkl_queue();    
 
-    lklq_enqueue(pending, from);
+    lklq_enqueue(pending, &from);
     while (!lklq_is_empty(pending)) {
-        int current = pending->front->data;
+        int current = *((int*) lklq_front(pending));
         debug_log("Visiting: %d\n", current);
 
         lklq_dequeue(pending);
@@ -89,7 +90,7 @@ int* graph_bfs(struct AdjacencyListGraph* graph, int from) {
         while (node != NULL) {
             if (vertexes_visited[node->vertex] != 1 && vertexes_already_pending[node->vertex] != 1) {
                 debug_log("Adding %d to pending list\n", node->vertex);
-                lklq_enqueue(pending, node->vertex);
+                lklq_enqueue(pending, &node->vertex);
                 vertexes_already_pending[node->vertex] = 1;
             }
             node = node->next;
@@ -204,4 +205,11 @@ struct KruskalResult graph_kruskal(struct AdjacencyListGraph* graph) {
     return result;
 }
 
-void graph_dijkstra(struct AdjacencyListGraph* graph, int initial_vertex) {}
+struct DijkstraResult { double* distances; };
+
+struct DijkstraResult graph_dijkstra(struct AdjacencyListGraph* graph, int initial_vertex) {
+    double distances[MAX_GRAPH_SIZE]; for(int i=0;i<MAX_GRAPH_SIZE;i++) distances[i]=INFINITY;
+    int visited[MAX_GRAPH_SIZE]; memset(visited, 0, sizeof(visited));
+    struct DijkstraResult result = { .distances = distances };
+    return result;
+}
