@@ -15,7 +15,9 @@ void max_heap_tests() {
 
     { // inserting
         struct Heap* heap = create_max_heap(10);
+        assert(heap_is_empty(heap) == 1);
         heap_insert(heap, intp(5));
+        assert(heap_is_empty(heap) == 0);
         assert(*((int*) heap->elements[1]->value) == 5);
         assert(heap->current_index == 2);
         heap_insert(heap, intp(7));

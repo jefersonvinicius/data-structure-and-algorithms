@@ -1,3 +1,6 @@
+#ifndef __HEAP_HEADER
+#define __HEAP_HEADER
+
 #include "stdlib.h"
 #include "stdio.h"
 
@@ -110,3 +113,9 @@ void* heap_delete(struct Heap* heap) {
     }
     return deleted_value;
 }
+
+int heap_is_empty(struct Heap* heap) {
+    return heap->current_index <= 1;
+}
+
+#endif
