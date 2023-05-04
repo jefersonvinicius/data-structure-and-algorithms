@@ -43,6 +43,7 @@
         "array.h": "c",
         "system_error": "c",
         "initializer_list": "c",
-        "comparators.h": "c"
+        "comparators.h": "c",
+        "pair.h": "c"
     }
 }

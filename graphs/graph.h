@@ -4,6 +4,8 @@
 #include "math.h"
 #include <string.h>
 #include "queue/queue.h"
+#include "heap/heap.h"
+#include "pair/pair.h"
 #include "stack/linkedlist/stack.h"
 #include "sets/disjoint/disjoint.h"
 #include "heap/heap.h"
@@ -207,9 +209,34 @@ struct KruskalResult graph_kruskal(struct AdjacencyListGraph* graph) {
 
 struct DijkstraResult { double* distances; };
 
+int cmp_pairs(struct Pair* a, struct Pair* b) {
+   int a_weight = *((int*)a->left);
+   int b_weight = *((int*)b->left);
+   return a_weight < b_weight;
+}
+
+struct Pair* __make_vertex_pair(struct AdjacencyListGraph* graph, int vertex) {
+    return make_pair(&graph_get_vertex_edges(graph, vertex)->weight, &vertex);
+}
+
 struct DijkstraResult graph_dijkstra(struct AdjacencyListGraph* graph, int initial_vertex) {
     double distances[MAX_GRAPH_SIZE]; for(int i=0;i<MAX_GRAPH_SIZE;i++) distances[i]=INFINITY;
     int visited[MAX_GRAPH_SIZE]; memset(visited, 0, sizeof(visited));
+    distances[initial_vertex] = 0;
+    struct Heap* heap = create_heap(MAX_GRAPH_SIZE, sizeof(struct Pair), cmp_pairs);
+    heap_insert(heap, __make_vertex_pair(graph, initial_vertex));
+    while (!heap_is_empty(heap)) {
+        struct Pair* pair = (struct Pair*) heap_top(heap);
+        int current_vertex = *((int*) pair->right);
+        int current_vertex_weight = *((int*) pair->left);
+        printf("vertex: %d, weight: %d\n", current_vertex, current_vertex_weight);
+        heap_delete(heap);
+        struct ALGNode* node = graph_get_vertex_edges(graph, current_vertex);
+        while (node != NULL) {
+            heap_insert(heap, __make_vertex_pair(graph, node->vertex));
+            node = node->next;
+        } 
+    }
     struct DijkstraResult result = { .distances = distances };
     return result;
 }
