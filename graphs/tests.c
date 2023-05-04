@@ -155,12 +155,24 @@ int main() {
         struct AdjacencyListGraph* graph = create_adjacency_list_graph(IsBidirectional);
         graph_add_edge(graph, 0, 1, 2);
         graph_add_edge(graph, 0, 2, 4);
-        graph_add_edge(graph, 1, 3, 5);
-        graph_add_edge(graph, 2, 3, 1);
-        graph_add_edge(graph, 2, 4, 5);
-        graph_add_edge(graph, 3, 4, 2);
         struct DijkstraResult result = graph_dijkstra(graph, 0);
-        assert(result.distances[0] == INFINITY);
+        assert(result.distances[0] == 0);
+        assert(result.distances[1] == 2);
+        assert(result.distances[2] == 4);
+        graph_add_edge(graph, 1, 3, 5);
+        result = graph_dijkstra(graph, 0);
+        assert(result.distances[0] == 0);
+        assert(result.distances[1] == 2);
+        assert(result.distances[2] == 4);
+        assert(result.distances[3] == 7);
+        graph_add_edge(graph, 2, 3, 1);
+        result = graph_dijkstra(graph, 0);
+        assert(result.distances[0] == 0);
+        assert(result.distances[1] == 2);
+        assert(result.distances[2] == 4);
+        assert(result.distances[3] == 5);
+        // graph_add_edge(graph, 2, 4, 5);
+        // graph_add_edge(graph, 3, 4, 2);
     }
 
     return 0;
