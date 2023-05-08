@@ -171,8 +171,20 @@ int main() {
         assert(result.distances[1] == 2);
         assert(result.distances[2] == 4);
         assert(result.distances[3] == 5);
-        // graph_add_edge(graph, 2, 4, 5);
-        // graph_add_edge(graph, 3, 4, 2);
+        graph_add_edge(graph, 2, 4, 5);
+        result = graph_dijkstra(graph, 0);
+        assert(result.distances[0] == 0);
+        assert(result.distances[1] == 2);
+        assert(result.distances[2] == 4);
+        assert(result.distances[3] == 5);
+        assert(result.distances[4] == 9);
+        graph_add_edge(graph, 3, 4, 2);
+        result = graph_dijkstra(graph, 0);
+        assert(result.distances[0] == 0);
+        assert(result.distances[1] == 2);
+        assert(result.distances[2] == 4);
+        assert(result.distances[3] == 5);
+        assert(result.distances[4] == 7);
     }
 
     return 0;

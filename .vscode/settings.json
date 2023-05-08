@@ -44,6 +44,9 @@
         "system_error": "c",
         "initializer_list": "c",
         "comparators.h": "c",
-        "pair.h": "c"
+        "pair.h": "c",
+        "heap.h": "c",
+        "debug.h": "c",
+        "disjoint.h": "c"
     }
 }

@@ -217,7 +217,6 @@ int cmp_pairs(struct Pair* a, struct Pair* b) {
 }
 
 struct Pair* __make_vertex_pair(struct AdjacencyListGraph* graph, int vertex) {
-    printf("MAKING PAIR FOR VERTEX %d\n", vertex);
     return make_pair(&graph_get_vertex_edges(graph, vertex)->weight, intp(vertex));
 }
 
@@ -230,23 +229,20 @@ struct DijkstraResult graph_dijkstra(struct AdjacencyListGraph* graph, int initi
     while (!heap_is_empty(heap)) {
         struct Pair* pair = (struct Pair*) heap_top(heap);
         int current_vertex = *((int*) pair->right);
-        int current_vertex_weight = *((int*) pair->left);
         heap_delete(heap);
         if (visited[current_vertex]) continue;
         visited[current_vertex] = 1;
-        printf("\n\n========");
         struct ALGNode* node = graph_get_vertex_edges(graph, current_vertex);
         while (node != NULL) {
-            printf("CURRENT BETTER DISTANCE TO %d\n", node->vertex);
-            printf("COMPARING VERTEX %d <-%d-> %d\n", current_vertex, node->weight, node->vertex);
-            if (distances[current_vertex] + node->weight < distances[node->vertex]) {
+            if (distances[current_vertex] + node->weight < distances[node->vertex]) 
                 distances[node->vertex] = distances[current_vertex] + node->weight;
-            }
+            
             if (!visited[node->vertex])
                 heap_insert(heap, __make_vertex_pair(graph, node->vertex));
             node = node->next;
         }
     }
+    free(heap);
     struct DijkstraResult result = { .distances = distances };
     return result;
 }
